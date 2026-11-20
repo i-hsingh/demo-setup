@@ -25,10 +25,10 @@ var ownedObjects = []pdObject{
 	{"business service", "patient-portal"},
 	{"escalation policy", "claims-reconciliation escalation"},
 	{"event orchestration", "Reinvent Patient"},
-	{"incident workflow", "Paige Virtual Responder - Dedicated Slack Channel"},
-	{"incident workflow", "Kubernetes diagnostics"},
-	{"incident workflow", "Major Incident"},
-	{"incident workflow", "Kubernetes Remediation"},
+	{"incident workflow", "🏥 Paige Virtual Responder - Dedicated Slack Channel"},
+	{"incident workflow", "🏥 Kubernetes diagnostics"},
+	{"incident workflow", "🏥 Major Incident"},
+	{"incident workflow", "🏥 Kubernetes Remediation"},
 }
 
 // preflight checks the account before Terraform touches it and returns the

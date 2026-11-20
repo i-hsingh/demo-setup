@@ -1,15 +1,15 @@
 # 05: Incident workflows
 
-Terraform creates all four workflows complete: **exact names**, descriptions, triggers and steps. Nothing needs building in the UI.
+Terraform creates all four workflows complete (names start with 🏥 so they are easy to find): **exact names**, descriptions, triggers and steps. Nothing needs building in the UI.
 
 If you set `manage_incident_workflows = false`, create each workflow from its template instead, and set the name, trigger and service scope by hand to match the table.
 
 | Workflow (exact name) | Trigger | Created by Terraform |
 |---|---|---|
-| Paige Virtual Responder - Dedicated Slack Channel | Conditional on creation (`incident.urgency matches 'high'`), both services | 🟢 complete, steps included |
-| Kubernetes diagnostics | Conditional on creation, claims-reconciliation | 🟢 complete, steps included |
-| Major Incident | Manual, both services | 🟢 complete, steps included |
-| Kubernetes Remediation | Manual, claims-reconciliation | 🟢 complete, steps included |
+| 🏥 Paige Virtual Responder - Dedicated Slack Channel | Conditional on creation (`incident.urgency matches 'high'`), both services | 🟢 complete, steps included |
+| 🏥 Kubernetes diagnostics | Conditional on creation, claims-reconciliation | 🟢 complete, steps included |
+| 🏥 Major Incident | Manual, both services | 🟢 complete, steps included |
+| 🏥 Kubernetes Remediation | Manual, claims-reconciliation | 🟢 complete, steps included |
 
 Terraform owns every step, so make changes in `terraform/workflows.tf`, not the UI: the next apply reverts UI edits.
 
@@ -23,7 +23,7 @@ Terraform owns every step, so make changes in `terraform/workflows.tf`, not the 
 
 ## Kubernetes diagnostics
 
-Fake but realistic diagnostics: the output is staged `echo` lines in `terraform/k8s_workflow_output.tf` (pods, `top`, node MemoryPressure, missing memory limit, rollout history, logs, eviction events, summary), so it always matches the payloads.
+Plain kubectl output, no commentary, staged as `echo` lines in `terraform/k8s_workflow_output.tf` so it always matches the payloads: pods, deployments, `top`, warning events, the missing memory limit, rollout history, logs.
 
 1. **Collect pod diagnostics**: *Kubernetes Clusters: Run Pod Command* runs the echo script in `k8s_exec_pod` (default `claims-toolbox`, container `worker`, namespace `healthcare`) through the connection in `k8s_connection_id`.
 2. **Copy output to incident notes**: *Add Notes to Incident* with the step 1 `Command Output`.
@@ -44,7 +44,7 @@ Without `k8s_connection_id`, step 1 is left out and step 2 posts the same text d
 
 ## Kubernetes Remediation
 
-Manual. Shows the output of a remediation deployment with new settings: memory request 256Mi / limit 512Mi, `X12_PARSER_STREAMING=true`, `X12_MAX_BATCH_SEGMENTS=5000`, `GOMEMLIMIT=450MiB`, then the rollout, healthy pods and MemoryPressure cleared.
+Manual. Plain kubectl output of a deployment with new settings (memory request 256Mi / limit 512Mi, `X12_PARSER_STREAMING=true`, `X12_MAX_BATCH_SEGMENTS=5000`, `GOMEMLIMIT=450MiB`), the rollout, then everything healthy: all pods Running, node memory 41%, no warning events, clean logs.
 
 1. **Deploy new settings**: *Run Pod Command*, same pod and connection as diagnostics.
 2. **Copy output to incident notes**: the step 1 output as a note.

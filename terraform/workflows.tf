@@ -25,7 +25,7 @@ locals {
 
   managed_workflows = var.manage_incident_workflows ? {
     paige_slack = {
-      name        = "Paige Virtual Responder - Dedicated Slack Channel"
+      name        = "🏥 Paige Virtual Responder - Dedicated Slack Channel"
       description = "Creates a dedicated Slack channel for the incident and brings in Paige to investigate."
       trigger     = "conditional"
       services    = [for s in pagerduty_service.tech : s.id]
@@ -47,7 +47,7 @@ locals {
       )
     }
     major_incident = {
-      name        = "Major Incident"
+      name        = "🏥 Major Incident"
       description = "For P1 incidents with customer impact. Adds responders and stakeholders, opens a Google Chat space for the response and posts its link on the incident."
       trigger     = "manual"
       services    = [for s in pagerduty_service.tech : s.id]
@@ -101,14 +101,14 @@ locals {
       )
     }
     k8s_diagnostics = {
-      name        = "Kubernetes diagnostics"
+      name        = "🏥 Kubernetes diagnostics"
       description = "Collects pod, node, rollout and log diagnostics for ${var.technical_service_name} through the Kubernetes Cluster connector and copies them to the incident as a note."
       trigger     = "conditional"
       services    = [pagerduty_service.tech["claims"].id]
       steps       = local.k8s_steps["diagnostics"]
     }
     k8s_remediation = {
-      name        = "Kubernetes Remediation"
+      name        = "🏥 Kubernetes Remediation"
       description = "Applies a memory limit and parser streaming to the ${var.technical_service_name} deployment, waits for the rollout and copies the result to the incident as a note. Run only after a person approves Paige's recommendation."
       trigger     = "manual"
       services    = [pagerduty_service.tech["claims"].id]
@@ -140,7 +140,7 @@ locals {
         action = "pagerduty.com:incident-workflows:add-notes-to-incident:1"
         inputs = {
           "Incident ID" = "{{incident.id}}"
-          "Message"     = "${v.title} ({{current_date}})\n\n{{steps['${v.step}'].fields['Command Output']}}"
+          "Message"     = "{{steps['${v.step}'].fields['Command Output']}}"
         }
       },
       ] : [
@@ -149,7 +149,7 @@ locals {
         action = "pagerduty.com:incident-workflows:add-notes-to-incident:1"
         inputs = {
           "Incident ID" = "{{incident.id}}"
-          "Message"     = "${v.title} ({{current_date}})\n\n${join("\n", v.text)}"
+          "Message"     = join("\n", v.text)
         }
       },
     ]
