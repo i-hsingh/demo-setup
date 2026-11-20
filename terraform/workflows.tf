@@ -20,7 +20,7 @@ locals {
     local.responder_ref,
     local.team == null ? [] : [{ id = local.team, type = "team_reference" }],
   )
-  use_zoom  = var.major_incident_conference == "zoom"
+  use_gchat = var.major_incident_conference == "google_chat"
   use_slack = var.slack_workspace_id != ""
 
   managed_workflows = var.manage_incident_workflows ? {
@@ -48,7 +48,7 @@ locals {
     }
     major_incident = {
       name        = "Major Incident"
-      description = "For P1 incidents with customer impact. Adds responders and stakeholders, opens a Zoom bridge and brings in Scribe to capture decisions."
+      description = "For P1 incidents with customer impact. Adds responders and stakeholders, opens a Google Chat space for the response and posts its link on the incident."
       trigger     = "manual"
       services    = [for s in pagerduty_service.tech : s.id]
       steps = concat(
@@ -69,16 +69,33 @@ locals {
             inputs = { "Stakeholders" = jsonencode(local.stakeholders) }
           },
         ],
-        local.use_zoom ? [
+        local.use_gchat ? [
           {
-            name   = "Create a Zoom meeting"
-            action = "pagerduty.com:zoom:create-zoom-meeting:1"
-            inputs = {}
+            name   = "Create Google Chat space"
+            action = "pagerduty.com:google-chat:create-private-space:1"
+            inputs = merge(
+              { "Space Display Name" = "INC-{{incident.incident_number}} ${var.business_service_name} major incident" },
+              var.google_workspace == "" ? {} : { "Google Workspace" = var.google_workspace },
+            )
           },
           {
-            name   = "Add Scribe"
-            action = "pagerduty.com:pagerduty-advance:add-scribe-agent:1"
-            inputs = {}
+            name   = "Add responders to the space"
+            action = "pagerduty.com:google-chat:add-space-member:1"
+            inputs = merge(
+              {
+                "Space Name"  = "{{steps['Create Google Chat space'].fields['Space Name']}}"
+                "User Emails" = var.responder_email
+              },
+              var.google_workspace == "" ? {} : { "Google Workspace" = var.google_workspace },
+            )
+          },
+          {
+            name   = "Post the space link"
+            action = "pagerduty.com:incident-workflows:add-notes-to-incident:1"
+            inputs = {
+              "Incident ID" = "{{incident.id}}"
+              "Message"     = "Major incident declared. Google Chat space: {{steps['Create Google Chat space'].fields['Space URL']}}"
+            }
           },
         ] : [],
       )

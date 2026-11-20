@@ -71,7 +71,7 @@ Each beat lists what to say, what's on screen, and the setup it depends on.
 ### 5. A person decides, the platform mobilises
 
 - Paige recommends **Major Incident** (customer impact). You approve.
-- The workflow sets **P1**, adds responders and stakeholders, opens a **Zoom** bridge, and adds **Scribe** to capture decisions.
+- The workflow sets **P1**, adds responders and stakeholders, and opens a **Google Chat** space for the response, with its link posted on the incident.
 - **Say:** "Paige recommends, a human approves. That's the control point."
 
 ### 6. Fix it from the incident

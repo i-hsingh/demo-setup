@@ -90,14 +90,20 @@ variable "conditional_trigger_expression" {
 }
 
 variable "major_incident_conference" {
-  description = "\"zoom\": Major Incident opens a Zoom meeting and adds Scribe (needs the Zoom integration connected in PagerDuty). \"none\": skip both."
+  description = "\"google_chat\": Major Incident creates a Google Chat space, adds the responder and posts its link as a note (needs Google Chat connected in PagerDuty). \"none\": skip it."
   type        = string
-  default     = "zoom"
+  default     = "google_chat"
 
   validation {
-    condition     = contains(["zoom", "none"], var.major_incident_conference)
-    error_message = "major_incident_conference must be zoom or none."
+    condition     = contains(["google_chat", "none"], var.major_incident_conference)
+    error_message = "major_incident_conference must be google_chat or none."
   }
+}
+
+variable "google_workspace" {
+  description = "Name of the Google Workspace connected to PagerDuty, as shown in the Google Chat integration. Leave empty if only one is connected."
+  type        = string
+  default     = ""
 }
 
 variable "slack_workspace_id" {

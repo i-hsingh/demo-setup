@@ -32,14 +32,15 @@ Without `k8s_connection_id`, step 1 is left out and step 2 posts the same text d
 
 ## Major Incident
 
-- **Description:** For P1 incidents with customer impact. Adds responders and stakeholders, opens a Zoom bridge and brings in Scribe to capture decisions.
+- **Description:** For P1 incidents with customer impact. Adds responders and stakeholders, opens a Google Chat space for the response and posts its link on the incident.
 - **Trigger:** manual. It runs only when Paige recommends it and a person approves.
 - **Steps (Terraform), in order:**
   1. **Set priority P1** (skipped if `enable_priority = false`)
   2. **Add responders**: you, as a stand-in for a Patient Experience team
   3. **Add stakeholders**: you, plus `team_id` if set
-  4. **Create a Zoom meeting**: needs the Zoom integration connected (04). Set `major_incident_conference = "none"` to drop this step and Scribe.
-  5. **Add Scribe**: joins the Zoom call
+  4. **Create Google Chat space**: a private space named `INC-<number> patient-portal major incident`. Needs Google Chat connected (04). Set `google_workspace` if more than one workspace is connected; set `major_incident_conference = "none"` to drop steps 4–6.
+  5. **Add responders to the space**: adds the responder's email
+  6. **Post the space link**: an incident note with the space URL
 
 ## Kubernetes Remediation
 

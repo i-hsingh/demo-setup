@@ -12,7 +12,7 @@
 - [ ] Paige is paged at level 1 and the dedicated Slack channel appears with her findings
 - [ ] Kubernetes diagnostics note ("Send Pods to Paige") lists the claims-reconciliation pod
 - [ ] Paige's root cause names the `x12-claims-parser` upgrade, and her recommended fix matches the runbook
-- [ ] Major Incident (manual): responders, stakeholders, Zoom link, Scribe joins
+- [ ] Major Incident (manual): responders, stakeholders, Google Chat space created, link posted as a note
 - [ ] Kubernetes Remediation (manual): pod deleted and recreated, memory limit applied
 - [ ] Console view shows the Paige column + Alerts field
 - [ ] DEMO → 2 *Resolve the demo*, then the status page clears

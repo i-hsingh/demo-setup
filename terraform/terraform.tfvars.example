@@ -20,3 +20,8 @@
 # k8s_namespace      = "healthcare"
 # k8s_exec_pod       = "claims-toolbox"
 # k8s_exec_container = "worker"
+
+# Major Incident opens a Google Chat space ("none" to skip). Set the workspace
+# name only if more than one Google Workspace is connected.
+# major_incident_conference = "google_chat"
+# google_workspace          = ""

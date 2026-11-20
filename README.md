@@ -67,4 +67,4 @@ The routing key is injected at send time from `terraform output routing_key` (or
 The short version, with the full matrix in [instructions/README.md](instructions/README.md):
 
 - 🟢 **Automated:** services, business services, dependencies, routing key, change events, payloads, alert grouping, EO rule, EP (human), workflow names/descriptions/triggers, k8s workloads.
-- 🔴 **Manual:** Paige on the EP, workflow steps, runner registration, Agent Connector, Slack/Paige scopes, Zoom/Meet, runbook upload, internal status page, console view, EA flags.
+- 🔴 **Manual:** Paige on the EP, workflow steps, runner registration, Agent Connector, Slack/Paige scopes, Google Chat, runbook upload, internal status page, console view, EA flags.

@@ -11,7 +11,7 @@ All OAuth or UI-only. None of it can be scripted.
 
 ## Video bridge
 
-- [ ] **Zoom** (or Google Meet) connected under Integrations → Extensions. The Major Incident workflow's *Create a Zoom Meeting* step needs it. If you use Meet, swap that step for the Meet equivalent.
+- [ ] **Google Chat** connected (Integrations → Google Chat). The Major Incident workflow creates a private space, adds the responder and posts the link. If more than one Google Workspace is connected, set `google_workspace` in `terraform.tfvars` to its name.
 
 ## Kubernetes Agent Connector
 

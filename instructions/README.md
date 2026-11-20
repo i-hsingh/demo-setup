@@ -7,7 +7,7 @@ Work through these in order. The whole setup takes about 90 minutes the first ti
 | 01 | [01-platform.md](01-platform.md) | Plan, EA flags, nav, console view |
 | 02 | [02-terraform.md](02-terraform.md) | Services, business services, dependencies, EP, grouping, EO, the four incident workflows |
 | 03 | [03-kubernetes-and-runner.md](03-kubernetes-and-runner.md) | kind cluster, demo workloads, Automation Runner, toolbox RBAC |
-| 04 | [04-integrations.md](04-integrations.md) | Slack and Paige scopes, Zoom/Meet, Kubernetes Agent Connector, change events |
+| 04 | [04-integrations.md](04-integrations.md) | Slack and Paige scopes, Google Chat, Kubernetes Agent Connector, change events |
 | 05 | [05-incident-workflows.md](05-incident-workflows.md) | Steps for the four workflows |
 | 06 | [06-paige-runbook-status-page.md](06-paige-runbook-status-page.md) | Paige on the EP, runbook upload, internal status page |
 | 07 | [07-preflight.md](07-preflight.md) | Dry-run checklist, reset between demos, enablement sessions |
@@ -30,7 +30,7 @@ Work through these in order. The whole setup takes about 90 minutes the first ti
 | Escalation policy, human responder | 🟢 | Terraform |
 | **Paige at level 1** with Trigger SRE Agent on | 🔴 | EA feature, not in the provider. Added in the UI; Terraform ignores rule changes so it survives re-apply. |
 | Four incident workflows: names, descriptions, triggers | 🟢 | Terraform `pagerduty_incident_workflow` + `_trigger` |
-| Major Incident and Paige workflow **steps** | 🟢 | Terraform, with action IDs checked on the account. Zoom must be connected (04); the Slack channel step needs `slack_workspace_id`. |
+| Major Incident and Paige workflow **steps** | 🟢 | Terraform, with action IDs checked on the account. Google Chat must be connected (04); the Slack channel step needs `slack_workspace_id`. |
 | Kubernetes workflow **steps** (staged `echo` diagnostics and remediation, copied to incident notes) | 🟢 | Terraform. Runs in a pod via *Run Pod Command* when `k8s_connection_id` is set; otherwise posts the same output as a note. See 05. |
 | Demo Kubernetes workloads (leaky pod, neighbours, toolbox) | 🟡 | `k8s/*.yaml`, applied by hand with `kubectl` (03). Optional. |
 | kind cluster | 🟡 | `kind create cluster --config k8s/kind-config.yaml` (03). Optional. |
@@ -38,7 +38,7 @@ Work through these in order. The whole setup takes about 90 minutes the first ti
 | PD Automation Runner: deploy and RBAC | 🟡 | Manifest from the runner KB / UA Runner Kind script. This repo adds only the narrow toolbox RBAC. |
 | Kubernetes Agent Connector (all tools) | 🔴 | UI only |
 | Slack, PagerDuty AI in Slack, Paige scopes reauth | 🔴 | OAuth flows |
-| Zoom / Google Meet | 🔴 | OAuth flow |
+| Google Chat | 🔴 | OAuth flow |
 | Runbook content (troubleshooting only, no escalation) | 🟢 | `runbook/claims-reconciliation.md`, `runbook/scheduling.md` |
 | Runbook upload to the service | 🔴 | UI only |
 | Internal status page showing the patient-portal business service | 🔴 | The provider has no status page resources; the REST API doesn't create pages |
