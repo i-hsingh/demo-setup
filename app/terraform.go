@@ -15,7 +15,7 @@ func terraformOutput(dir, name string) (string, error) {
 		return "", err
 	}
 	format := "-raw"
-	if strings.HasSuffix(name, "_keys") { // map outputs
+	if strings.HasSuffix(name, "_keys") || name == "services" { // map outputs
 		format = "-json"
 	}
 	cmd := exec.Command(tf, "-chdir="+dir, "output", format, name)

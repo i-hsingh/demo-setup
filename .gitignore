@@ -10,3 +10,4 @@ dist/
 terraform/*.tfplan
 terraform/.terraform.tfstate.lock.info
 .demo-runs
+.routing-ready

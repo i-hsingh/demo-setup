@@ -205,6 +205,10 @@ func cmdCreate(args []string) error {
 	if err := planAndApply(c.tfDir(), vars, false, *auto, false); err != nil {
 		return err
 	}
+	fmt.Println()
+	if err := ensureRouting(&c, &set); err != nil {
+		return err
+	}
 	fmt.Println("\nNext: the few steps done in the PagerDuty web app (SETUP → 5 \"Open the setup guide\"), then DEMO → 1 RUN THE DEMO.")
 	return nil
 }
@@ -232,6 +236,9 @@ func cmdRun(args []string) error {
 		return err
 	}
 	if ckeys, err = c.changeKeys(); err != nil {
+		return err
+	}
+	if err := ensureRouting(&c, nil); err != nil {
 		return err
 	}
 	s := newSender(key, ckeys, false)
