@@ -25,3 +25,8 @@
 # name only if more than one Google Workspace is connected.
 # major_incident_conference = "google_chat"
 # google_workspace          = ""
+
+# Incident roles Major Incident assigns to you, by role ID (names don't work).
+# major_incident_roles = [
+#   { name = "Incident Commander", id = "PXXXXXX" },
+# ]

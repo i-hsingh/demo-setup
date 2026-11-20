@@ -48,7 +48,7 @@ locals {
     }
     major_incident = {
       name        = "🏥 Major Incident"
-      description = "For P1 incidents with customer impact. Adds responders and stakeholders, opens a Google Chat space for the response and posts its link on the incident."
+      description = "For P1 incidents with customer impact. Assigns incident roles, adds responders, stakeholders and Scribe, opens a Google Chat space for the response and posts its link on the incident."
       trigger     = "manual"
       services    = [for s in pagerduty_service.tech : s.id]
       steps = concat(
@@ -57,6 +57,15 @@ locals {
           action = "pagerduty.com:incident-workflows:update-incident-priority:1"
           inputs = { "Priority" = data.pagerduty_priority.p1[0].id }
         }] : [],
+        # Incident roles, all given to the responder (one-person demo).
+        [for r in var.major_incident_roles : {
+          name   = "Assign ${r.name}"
+          action = "pagerduty.com:roles:assign-role:1"
+          inputs = {
+            "Role"     = r.id
+            "Assignee" = data.pagerduty_user.responder.id
+          }
+        }],
         [
           {
             name   = "Add responders"
@@ -67,6 +76,11 @@ locals {
             name   = "Add stakeholders"
             action = "pagerduty.com:incident-workflows:add-stakeholders:3"
             inputs = { "Stakeholders" = jsonencode(local.stakeholders) }
+          },
+          {
+            name   = "Add Scribe"
+            action = "pagerduty.com:pagerduty-advance:add-scribe-agent:1"
+            inputs = {}
           },
         ],
         local.use_gchat ? [

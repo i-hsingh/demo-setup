@@ -143,3 +143,12 @@ variable "k8s_exec_container" {
   type        = string
   default     = "worker"
 }
+
+variable "major_incident_roles" {
+  description = "Incident roles Major Incident assigns to the responder, by role ID. Role names don't work, and the API can't list roles: copy each ID from an existing workflow's Assign an Incident Role step (or the role's URL in Incident Settings → Roles). An unknown ID stops the workflow."
+  type = list(object({
+    name = string # label for the step, e.g. "Incident Commander"
+    id   = string # role ID, e.g. "PXXXXXX"
+  }))
+  default = []
+}
