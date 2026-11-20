@@ -5,7 +5,7 @@ Work through these in order. The whole setup takes about 90 minutes the first ti
 | # | Doc | What |
 |---|---|---|
 | 01 | [01-platform.md](01-platform.md) | Plan, EA flags, nav, console view |
-| 02 | [02-terraform.md](02-terraform.md) | Services, business services, dependencies, EP, grouping, EO, workflow shells |
+| 02 | [02-terraform.md](02-terraform.md) | Services, business services, dependencies, EP, grouping, EO, the four incident workflows |
 | 03 | [03-kubernetes-and-runner.md](03-kubernetes-and-runner.md) | kind cluster, demo workloads, Automation Runner, toolbox RBAC |
 | 04 | [04-integrations.md](04-integrations.md) | Slack and Paige scopes, Zoom/Meet, Kubernetes Agent Connector, change events |
 | 05 | [05-incident-workflows.md](05-incident-workflows.md) | Steps for the four workflows |
@@ -31,7 +31,7 @@ Work through these in order. The whole setup takes about 90 minutes the first ti
 | **Paige at level 1** with Trigger SRE Agent on | 🔴 | EA feature, not in the provider. Added in the UI; Terraform ignores rule changes so it survives re-apply. |
 | Four incident workflows: names, descriptions, triggers | 🟢 | Terraform `pagerduty_incident_workflow` + `_trigger` |
 | Major Incident and Paige workflow **steps** | 🟢 | Terraform, with action IDs checked on the account. Zoom must be connected (04); the Slack channel step needs `slack_workspace_id`. |
-| Kubernetes workflow **steps** | 🔴 | They bind to the Agent Connector and runner, which the provider can't look up. Added in the UI; Terraform ignores `step`. See 05. |
+| Kubernetes workflow **steps** (staged `echo` diagnostics and remediation, copied to incident notes) | 🟢 | Terraform. Runs in a pod via *Run Pod Command* when `k8s_connection_id` is set; otherwise posts the same output as a note. See 05. |
 | Demo Kubernetes workloads (leaky pod, neighbours, toolbox) | 🟡 | `k8s/*.yaml`, applied by hand with `kubectl` (03). Optional. |
 | kind cluster | 🟡 | `kind create cluster --config k8s/kind-config.yaml` (03). Optional. |
 | PD Automation Runner: register, credentials | 🔴 | Registration issues `RUNNER_ID` / `RUNNER_SECRET` in the UI |

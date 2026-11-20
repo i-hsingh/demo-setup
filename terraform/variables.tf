@@ -111,3 +111,29 @@ variable "runbook_base_url" {
   type        = string
   default     = "https://github.com/justynroberts/reinvent/blob/main/runbook"
 }
+
+# --- Kubernetes workflows ---------------------------------------------------
+
+variable "k8s_connection_id" {
+  description = "ID of a Kubernetes Cluster connection (Integrations → Workflow Integrations → Kubernetes Clusters). When set, the two Kubernetes workflows run their output in a pod through it; when empty, they post the same output as an incident note directly."
+  type        = string
+  default     = ""
+}
+
+variable "k8s_namespace" {
+  description = "Namespace the Kubernetes workflows run in and report on."
+  type        = string
+  default     = "healthcare"
+}
+
+variable "k8s_exec_pod" {
+  description = "Pod the Kubernetes workflows run their commands in. Any pod with /bin/sh works (the commands only echo)."
+  type        = string
+  default     = "claims-toolbox"
+}
+
+variable "k8s_exec_container" {
+  description = "Container in k8s_exec_pod to run the commands in."
+  type        = string
+  default     = "worker"
+}

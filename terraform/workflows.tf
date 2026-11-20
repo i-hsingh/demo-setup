@@ -1,16 +1,12 @@
-# Incident workflows: exact names, descriptions and triggers for all four.
+# Incident workflows: exact names, descriptions, triggers and steps for all
+# four. Terraform owns every step, so change them here, not in the UI (the
+# next apply reverts UI edits). Every action ID was checked against
+# GET /incident_workflows/actions on the account.
 #
-# Steps are owned in two different places:
-#
-# - "managed" workflows (Major Incident, Paige Virtual Responder): Terraform
-#   owns the steps. Every action ID below was checked against this account's
-#   GET /incident_workflows/actions, and the input formats were copied from
-#   existing workflows on the account.
-# - "manual" workflows (Kubernetes diagnostics / remediation): their steps go
-#   through the Kubernetes Agent Connector and the self-hosted runner, which
-#   the provider can't look up. You add them in the UI
-#   (instructions/05-incident-workflows.md), and `ignore_changes = [step]`
-#   stops a later apply from wiping them.
+# The two Kubernetes workflows run staged `echo` output (k8s_workflow_output.tf)
+# through the Kubernetes Cluster connector and copy it to the incident as a
+# note. Without a connector (k8s_connection_id empty) they post the same output
+# as a note directly, so the demo still works.
 
 # Major Incident sets this priority when a person declares it.
 data "pagerduty_priority" "p1" {
@@ -87,24 +83,61 @@ locals {
         ] : [],
       )
     }
-  } : {}
-
-  manual_workflows = var.manage_incident_workflows ? {
     k8s_diagnostics = {
       name        = "Kubernetes diagnostics"
-      description = "Lists the claims-reconciliation pods through the Kubernetes Agent Connector and sends them to Paige as an incident note."
+      description = "Collects pod, node, rollout and log diagnostics for ${var.technical_service_name} through the Kubernetes Cluster connector and copies them to the incident as a note."
       trigger     = "conditional"
       services    = [pagerduty_service.tech["claims"].id]
+      steps       = local.k8s_steps["diagnostics"]
     }
     k8s_remediation = {
       name        = "Kubernetes Remediation"
-      description = "Restarts the claims-reconciliation pod and applies a memory limit to the deployment. Run only after a person approves Paige's recommendation."
+      description = "Applies a memory limit and parser streaming to the ${var.technical_service_name} deployment, waits for the rollout and copies the result to the incident as a note. Run only after a person approves Paige's recommendation."
       trigger     = "manual"
       services    = [pagerduty_service.tech["claims"].id]
+      steps       = local.k8s_steps["remediation"]
     }
   } : {}
 
-  all_workflows = merge(local.managed_workflows, local.manual_workflows)
+  # Kubernetes workflow steps: run the echo script in a pod, then copy its
+  # output to a note. No connector: the note carries the same text directly.
+  k8s_steps = {
+    for k, v in {
+      diagnostics = { step = "Collect pod diagnostics", title = "Kubernetes diagnostics", command = local.k8s_diagnostics_command, text = local.k8s_diagnostics_lines }
+      remediation = { step = "Deploy new settings", title = "Kubernetes remediation", command = local.k8s_remediation_command, text = local.k8s_remediation_lines }
+      } : k => var.k8s_connection_id != "" ? [
+      {
+        name   = v.step
+        action = "pagerduty.com:kubernetes-clusters:run-pod-command:3"
+        inputs = {
+          "Connection Input" = var.k8s_connection_id
+          "Pod Name"         = var.k8s_exec_pod
+          "Namespace"        = var.k8s_namespace
+          "Container"        = var.k8s_exec_container
+          "Shell"            = "/bin/sh"
+          "Command"          = v.command
+        }
+      },
+      {
+        name   = "Copy output to incident notes"
+        action = "pagerduty.com:incident-workflows:add-notes-to-incident:1"
+        inputs = {
+          "Incident ID" = "{{incident.id}}"
+          "Message"     = "${v.title} ({{current_date}})\n\n{{steps['${v.step}'].fields['Command Output']}}"
+        }
+      },
+      ] : [
+      {
+        name   = "Copy output to incident notes"
+        action = "pagerduty.com:incident-workflows:add-notes-to-incident:1"
+        inputs = {
+          "Incident ID" = "{{incident.id}}"
+          "Message"     = "${v.title} ({{current_date}})\n\n${join("\n", v.text)}"
+        }
+      },
+    ]
+  }
+
 }
 
 resource "pagerduty_incident_workflow" "managed" {
@@ -130,22 +163,10 @@ resource "pagerduty_incident_workflow" "managed" {
   }
 }
 
-resource "pagerduty_incident_workflow" "manual" {
-  for_each = local.manual_workflows
-
-  name        = each.value.name
-  description = each.value.description
-  team        = local.team
-
-  lifecycle {
-    ignore_changes = [step]
-  }
-}
-
 resource "pagerduty_incident_workflow_trigger" "this" {
-  for_each = local.all_workflows
+  for_each = local.managed_workflows
 
-  workflow                   = try(pagerduty_incident_workflow.managed[each.key].id, pagerduty_incident_workflow.manual[each.key].id)
+  workflow                   = pagerduty_incident_workflow.managed[each.key].id
   type                       = each.value.trigger
   services                   = each.value.services
   subscribed_to_all_services = false
@@ -169,6 +190,16 @@ moved {
 }
 
 moved {
+  from = pagerduty_incident_workflow.manual["k8s_diagnostics"]
+  to   = pagerduty_incident_workflow.managed["k8s_diagnostics"]
+}
+
+moved {
   from = pagerduty_incident_workflow.this["k8s_remediation"]
   to   = pagerduty_incident_workflow.manual["k8s_remediation"]
+}
+
+moved {
+  from = pagerduty_incident_workflow.manual["k8s_remediation"]
+  to   = pagerduty_incident_workflow.managed["k8s_remediation"]
 }

@@ -12,3 +12,11 @@
 
 # Set false to build all four workflows by hand from templates.
 # manage_incident_workflows = true
+
+# Kubernetes workflows. Paste the ID of a Kubernetes Cluster connection
+# (Integrations → Workflow Integrations → Kubernetes Clusters) to run their
+# output in a pod. Empty: they post the same output as an incident note.
+# k8s_connection_id  = ""
+# k8s_namespace      = "healthcare"
+# k8s_exec_pod       = "claims-toolbox"
+# k8s_exec_container = "worker"

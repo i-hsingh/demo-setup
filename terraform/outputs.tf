@@ -33,5 +33,5 @@ output "escalation_policy_id" {
 
 output "incident_workflows" {
   description = "Workflow IDs. Major Incident and the Paige workflow have their steps from Terraform; add the Kubernetes ones in the UI."
-  value       = { for k, w in merge(pagerduty_incident_workflow.managed, pagerduty_incident_workflow.manual) : w.name => w.id }
+  value       = { for k, w in pagerduty_incident_workflow.managed : w.name => w.id }
 }

@@ -1,17 +1,17 @@
 # 05: Incident workflows
 
-Terraform has already created all four workflows with the **exact names**, descriptions and triggers. **Major Incident** and **Paige Virtual Responder** come complete, steps included. Only the two Kubernetes workflows need steps added under Automation → Incident Workflows, because those steps go through the Agent Connector and runner. Publish each one when you're done.
+Terraform creates all four workflows complete: **exact names**, descriptions, triggers and steps. Nothing needs building in the UI.
 
 If you set `manage_incident_workflows = false`, create each workflow from its template instead, and set the name, trigger and service scope by hand to match the table.
 
 | Workflow (exact name) | Trigger | Created by Terraform |
 |---|---|---|
 | Paige Virtual Responder - Dedicated Slack Channel | Conditional on creation (`incident.urgency matches 'high'`), both services | 🟢 complete, steps included |
-| Kubernetes diagnostics | Conditional on creation, claims-reconciliation | 🟢 shell + trigger, 🔴 steps |
+| Kubernetes diagnostics | Conditional on creation, claims-reconciliation | 🟢 complete, steps included |
 | Major Incident | Manual, both services | 🟢 complete, steps included |
-| Kubernetes Remediation | Manual, claims-reconciliation | 🟢 shell + trigger, 🔴 steps |
+| Kubernetes Remediation | Manual, claims-reconciliation | 🟢 complete, steps included |
 
-Terraform owns the steps of the two complete workflows, so make changes in `terraform/workflows.tf`, not the UI: the next apply reverts UI edits. The Kubernetes steps are 🔴 because they bind to the Agent Connector and runner, which the provider can't look up. Terraform ignores their steps.
+Terraform owns every step, so make changes in `terraform/workflows.tf`, not the UI: the next apply reverts UI edits.
 
 ---
 
@@ -23,13 +23,12 @@ Terraform owns the steps of the two complete workflows, so make changes in `terr
 
 ## Kubernetes diagnostics
 
-Reference: the orbitpay example linked in [story/brief.md](../story/brief.md).
+Fake but realistic diagnostics: the output is staged `echo` lines in `terraform/k8s_workflow_output.tf` (pods, `top`, node MemoryPressure, missing memory limit, rollout history, logs, eviction events, summary), so it always matches the payloads.
 
-1. **List Objects**, renamed **List claims-reconciliation pods**
-   - Connector: the Kubernetes Agent Connector / runner from 03
-   - Kind: Pod · Namespace: `healthcare` · Label selector: `app=claims-reconciliation`
-2. **Add Note to an Incident**, renamed **Send Pods to Paige**
-   - Note body: the output of step 1. Insert it with the workflow's variable picker; field names differ by action version.
+1. **Collect pod diagnostics**: *Kubernetes Clusters: Run Pod Command* runs the echo script in `k8s_exec_pod` (default `claims-toolbox`, container `worker`, namespace `healthcare`) through the connection in `k8s_connection_id`.
+2. **Copy output to incident notes**: *Add Notes to Incident* with the step 1 `Command Output`.
+
+Without `k8s_connection_id`, step 1 is left out and step 2 posts the same text directly, so the note still appears.
 
 ## Major Incident
 
@@ -44,31 +43,12 @@ Reference: the orbitpay example linked in [story/brief.md](../story/brief.md).
 
 ## Kubernetes Remediation
 
-Reference: the orbitpay example linked in [story/brief.md](../story/brief.md). Build the variant that matches how claims-reconciliation runs in your cluster. `k8s/healthcare.yaml` (03) runs it as a **Deployment**.
+Manual. Shows the output of a remediation deployment with new settings: memory request 256Mi / limit 512Mi, `X12_PARSER_STREAMING=true`, `X12_MAX_BATCH_SEGMENTS=5000`, `GOMEMLIMIT=450MiB`, then the rollout, healthy pods and MemoryPressure cleared.
 
-### Variant A: Pod Created through Deployment (default)
+1. **Deploy new settings**: *Run Pod Command*, same pod and connection as diagnostics.
+2. **Copy output to incident notes**: the step 1 output as a note.
 
-1. **Delete Pod**: namespace `healthcare`, label selector `app=claims-reconciliation`. The Deployment recreates it.
-2. **Delay**: 15–20 s
-3. **Pod Command** (update memory limit): pod `claims-toolbox`, namespace `healthcare`, container `worker`, command:
-   ```sh
-   kubectl -n healthcare set resources deployment/claims-reconciliation -c app --requests=memory=256Mi --limits=memory=512Mi
-   ```
-
-### Variant B: Pod Created Adhoc
-
-1. **Delete Pod**: namespace `healthcare`, name `claims-reconciliation`
-2. **Delay**: 15 s
-3. **Create Pod**: use the spec in `k8s/claims-reconciliation-adhoc-pod.yaml` (same app, with a memory limit). This mimics Kubernetes spinning up a new pod from a Deployment.
-
-**Check (A):**
-
-```bash
-kubectl -n healthcare get deploy claims-reconciliation -o jsonpath='{.spec.template.spec.containers[0].resources}'
-# {"limits":{"memory":"512Mi"},"requests":{"memory":"256Mi"}}
-```
-
-Patching resources triggers a rollout, so the pod restarts a second time. That's expected.
+Same fallback: no connection, the note carries the text directly. The commands only `echo`; nothing in the cluster changes.
 
 ---
 
