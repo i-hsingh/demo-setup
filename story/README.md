@@ -84,7 +84,7 @@ Each beat lists what to say, what's on screen, and the setup it depends on.
 ### 7. Close the loop
 
 - **Resolve demo alerts** in `./trigger`. The alerts on both services resolve, `patient-portal` goes back to operational, and the status page clears.
-- **Show:** the incident timeline. It contains the change event, the EO annotation, Paige's notes, the workflow runs, and the Scribe summary.
+- **Show:** the incident timeline. It contains the change event, the EO annotation, Paige's notes, the workflow runs, and the Google Chat space link.
 - **Say:** "Detection to fix in minutes, with the record written for us. And the follow-up is clear: pin the library and enforce memory limits."
 
 ## One-line versions
