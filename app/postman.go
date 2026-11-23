@@ -35,7 +35,7 @@ func postmanCollection(sc *Scenario) ([]byte, error) {
 		}
 		svc := routedTo(body)
 		path := []string{"v2", "enqueue"}
-		desc := fmt.Sprintf("Routed by the Reinvent Patient orchestration to **%s** (custom_details.service).", svc)
+		desc := fmt.Sprintf("Routed by the Payments Demo orchestration to **%s** (custom_details.service).", svc)
 		if st.Type == "change" {
 			path = []string{"v2", "change", "enqueue"}
 			v := changeVar(svc)
@@ -80,7 +80,7 @@ func postmanCollection(sc *Scenario) ([]byte, error) {
 
 	vars := []any{
 		map[string]any{"key": "events_url", "value": "https://events.pagerduty.com", "description": "EU accounts: https://events.eu.pagerduty.com"},
-		map[string]any{"key": "orchestration_routing_key", "value": "", "description": "Paste yours: PagerDuty → Automation → Event Orchestration → Reinvent Patient → Integrations (or `terraform output -raw routing_key`)"},
+		map[string]any{"key": "orchestration_routing_key", "value": "", "description": "Paste yours: PagerDuty → Automation → Event Orchestration → Payments Demo → Integrations (or `terraform output -raw routing_key`)"},
 	}
 	names := make([]string, 0, len(changeVars))
 	for k := range changeVars {

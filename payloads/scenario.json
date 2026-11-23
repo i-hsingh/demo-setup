@@ -4,7 +4,7 @@
   "vars": {
     "cluster": "eks-sre-demo",
     "namespace": "payments",
-    "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "node": "ip-10-0-12-34.ec2.internal",
     "deployment": "payment-api",
     "claims_service": "payment-api",
     "scheduling_service": "checkout",

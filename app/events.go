@@ -60,7 +60,7 @@ func (s *sender) send(kind string, body map[string]any) error {
 		if kind == "change" {
 			fmt.Printf("    → sent directly to the %q service's change integration\n", routedTo(body))
 		} else if svc := routedTo(body); svc != "" {
-			fmt.Printf("    → Reinvent Patient orchestration routes this to service %q\n", svc)
+			fmt.Printf("    → Payments Demo orchestration routes this to service %q\n", svc)
 		}
 		return nil
 	}

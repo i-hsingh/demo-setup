@@ -12,14 +12,14 @@
       "customer_impact": "payments-portal: customers can't complete purchases",
       "error_rate": "38% 503 over 5m (threshold 5%)",
       "namespace": "payments",
-      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+      "node": "ip-10-0-12-34.ec2.internal",
       "platform": "kubernetes",
       "ready_endpoints": "0/1 (pod evicted, replacement Pending on memory-pressure taint)",
       "service": "checkout"
     },
     "group": "payments",
     "severity": "error",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "source": "ip-10-0-12-34.ec2.internal",
     "summary": "Kubernetes: ingress returning 503 for 38% of checkout requests, 0 ready endpoints; purchases failing in payments-portal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"

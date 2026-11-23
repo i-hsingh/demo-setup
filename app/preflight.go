@@ -24,7 +24,7 @@ var ownedObjects = []pdObject{
 	{"service", "checkout"},
 	{"business service", "payments-portal"},
 	{"escalation policy", "payment-api escalation"},
-	{"event orchestration", "Reinvent Patient"},
+	{"event orchestration", "Payments Demo"},
 	{"incident workflow", "🏥 Paige Virtual Responder - Dedicated Slack Channel"},
 	{"incident workflow", "🏥 Kubernetes diagnostics"},
 	{"incident workflow", "🏥 Major Incident"},

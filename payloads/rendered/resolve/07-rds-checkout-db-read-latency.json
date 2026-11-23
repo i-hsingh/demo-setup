@@ -16,9 +16,9 @@
       "read_latency_p99": "180ms (normal 12ms)",
       "service": "checkout"
     },
-    "group": "aws-ap-southeast-2",
+    "group": "aws-us-east-1",
     "severity": "warning",
-    "source": "checkout-db.c9xk2l.ap-southeast-2.rds.amazonaws.com",
+    "source": "checkout-db.c9xk2l.us-east-1.rds.amazonaws.com",
     "summary": "RDS checkout-db: ReadLatency 180ms (threshold 50ms), DatabaseConnections 312 of 400"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"

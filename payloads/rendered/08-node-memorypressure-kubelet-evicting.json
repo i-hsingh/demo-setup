@@ -1,6 +1,6 @@
 {
   "client": "Prometheus Alertmanager (eks-sre-demo)",
-  "dedup_key": "reinvent/ip-10-0-12-34.ap-southeast-2.compute.internal/memory-pressure",
+  "dedup_key": "reinvent/ip-10-0-12-34.ec2.internal/memory-pressure",
   "event_action": "trigger",
   "payload": {
     "class": "node_memory_pressure",
@@ -11,15 +11,15 @@
       "condition": "MemoryPressure=True",
       "eviction_policy": "kubelet evicts BestEffort/Burstable pods first; payment-api survives because it has no request/limit to exceed",
       "memory_available": "212Mi (eviction threshold 300Mi)",
-      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+      "node": "ip-10-0-12-34.ec2.internal",
       "platform": "kubernetes",
       "service": "payment-api",
       "top_consumer": "payments/payment-api (7.4Gi working set, no limit)"
     },
     "group": "eks-sre-demo",
     "severity": "error",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
-    "summary": "Kubernetes: node ip-10-0-12-34.ap-southeast-2.compute.internal MemoryPressure=True, kubelet evicting pods"
+    "source": "ip-10-0-12-34.ec2.internal",
+    "summary": "Kubernetes: node ip-10-0-12-34.ec2.internal MemoryPressure=True, kubelet evicting pods"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

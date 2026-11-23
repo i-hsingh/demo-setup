@@ -9,7 +9,7 @@
 locals {
   k8s_ns   = var.k8s_namespace
   k8s_app  = var.technical_service_name
-  k8s_node = "ip-10-0-12-34.ap-southeast-2.compute.internal"
+  k8s_node = "ip-10-0-12-34.ec2.internal"
 
   # Diagnostics: the broken state.
   k8s_diagnostics_lines = [

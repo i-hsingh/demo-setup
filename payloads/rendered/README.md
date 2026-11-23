@@ -6,17 +6,17 @@ Generated from `payloads/scenario.json` by `./trigger export`. Plain JSON for th
 |---|---|---|---|
 | 1 | `01-change-event-checkout-v5-2-0-config-only-red-herring.json` | `/v2/change/enqueue` | `checkout` (its change integration key) |
 | 2 | `02-change-event-payment-api-v2-14-0-rollout-codec-library-upgrade.json` | `/v2/change/enqueue` | `payment-api` (its change integration key) |
-| 3 | `03-noise-probe-latency-info-suppressed-by-eo.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
-| 4 | `04-payment-api-memory-leak-worker-hung.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
-| 5 | `05-splunk-payment-api-iso-8583-decode-error-spike.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
-| 6 | `06-checkout-latency-readiness-failing.json` | `/v2/enqueue` | `checkout` (Reinvent Patient orchestration, dynamic routing) |
-| 7 | `07-rds-checkout-db-read-latency.json` | `/v2/enqueue` | `checkout` (Reinvent Patient orchestration, dynamic routing) |
-| 8 | `08-node-memorypressure-kubelet-evicting.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
-| 9 | `09-checkout-and-payments-portal-pods-evicted.json` | `/v2/enqueue` | `checkout` (Reinvent Patient orchestration, dynamic routing) |
-| 10 | `10-checkout-503s-at-the-ingress.json` | `/v2/enqueue` | `checkout` (Reinvent Patient orchestration, dynamic routing) |
-| 11 | `11-synthetics-complete-a-purchase-journey-failing.json` | `/v2/enqueue` | `checkout` (Reinvent Patient orchestration, dynamic routing) |
-| 12 | `12-card-authorisation-queue-backing-up.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
-| 13 | `13-acquirer-settlement-batch-acknowledgements-overdue.json` | `/v2/enqueue` | `payment-api` (Reinvent Patient orchestration, dynamic routing) |
+| 3 | `03-noise-probe-latency-info-suppressed-by-eo.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
+| 4 | `04-payment-api-memory-leak-worker-hung.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
+| 5 | `05-splunk-payment-api-iso-8583-decode-error-spike.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
+| 6 | `06-checkout-latency-readiness-failing.json` | `/v2/enqueue` | `checkout` (Payments Demo orchestration, dynamic routing) |
+| 7 | `07-rds-checkout-db-read-latency.json` | `/v2/enqueue` | `checkout` (Payments Demo orchestration, dynamic routing) |
+| 8 | `08-node-memorypressure-kubelet-evicting.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
+| 9 | `09-checkout-and-payments-portal-pods-evicted.json` | `/v2/enqueue` | `checkout` (Payments Demo orchestration, dynamic routing) |
+| 10 | `10-checkout-503s-at-the-ingress.json` | `/v2/enqueue` | `checkout` (Payments Demo orchestration, dynamic routing) |
+| 11 | `11-synthetics-complete-a-purchase-journey-failing.json` | `/v2/enqueue` | `checkout` (Payments Demo orchestration, dynamic routing) |
+| 12 | `12-card-authorisation-queue-backing-up.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
+| 13 | `13-acquirer-settlement-batch-acknowledgements-overdue.json` | `/v2/enqueue` | `payment-api` (Payments Demo orchestration, dynamic routing) |
 
 ## Notes
 

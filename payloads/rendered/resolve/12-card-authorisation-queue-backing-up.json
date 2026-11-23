@@ -18,7 +18,7 @@
     },
     "group": "payments",
     "severity": "warning",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "source": "ip-10-0-12-34.ec2.internal",
     "summary": "Kubernetes: card authorisation queue depth 4,812 (threshold 500), oldest message 11m, consumer payment-api not acking"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"

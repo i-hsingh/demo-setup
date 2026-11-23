@@ -155,7 +155,7 @@ post() { printf '%%-50s ' "$2"; curl -sS -X POST "$URL$1" -H 'Content-Type: appl
 		if wait, _ := time.ParseDuration(st.WaitAfter); wait > 0 && i < len(sc.Steps)-1 {
 			fmt.Fprintf(&send, "sleep %d\n", int(wait.Seconds()))
 		}
-		via := fmt.Sprintf("`%s` (Reinvent Patient orchestration, dynamic routing)", svc)
+		via := fmt.Sprintf("`%s` (Payments Demo orchestration, dynamic routing)", svc)
 		if st.Type == "change" {
 			via = fmt.Sprintf("`%s` (its change integration key)", svc)
 		}

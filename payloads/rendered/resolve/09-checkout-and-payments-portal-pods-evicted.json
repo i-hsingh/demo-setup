@@ -12,7 +12,7 @@
       "customer_impact": "payments-portal: checkout returning 503, customers can't complete purchases",
       "evicted_pods": "payments-portal (reason: Evicted, node had MemoryPressure), checkout (reason: Evicted, node had MemoryPressure)",
       "namespace": "payments",
-      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+      "node": "ip-10-0-12-34.ec2.internal",
       "pending_reason": "0/1 nodes available: 1 node(s) had untolerated taint {node.kubernetes.io/memory-pressure}",
       "platform": "kubernetes",
       "ready_replicas": "payments-portal 0/1, checkout 0/1",
@@ -20,8 +20,8 @@
     },
     "group": "payments",
     "severity": "critical",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
-    "summary": "Kubernetes: checkout and payments-portal pods evicted from ip-10-0-12-34.ap-southeast-2.compute.internal (MemoryPressure), 0/1 ready; customers can't pay in payments-portal"
+    "source": "ip-10-0-12-34.ec2.internal",
+    "summary": "Kubernetes: checkout and payments-portal pods evicted from ip-10-0-12-34.ec2.internal (MemoryPressure), 0/1 ready; customers can't pay in payments-portal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

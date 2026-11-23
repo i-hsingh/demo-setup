@@ -22,7 +22,7 @@
       "memory_limit": "none (resources.limits.memory not set)",
       "memory_trend": "linear growth of ~150Mi/min since rollout of v2.14.0 47m ago; flat at ~600Mi on v2.13.4",
       "namespace": "payments",
-      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+      "node": "ip-10-0-12-34.ec2.internal",
       "node_allocatable_memory": "7.7Gi",
       "platform": "kubernetes",
       "pod_selector": "app=payment-api",
@@ -33,8 +33,8 @@
     },
     "group": "payments",
     "severity": "critical",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
-    "summary": "Kubernetes: payment-api pod memory at 96% of node allocatable and authorisation worker hung (no heartbeat 4m) on ip-10-0-12-34.ap-southeast-2.compute.internal"
+    "source": "ip-10-0-12-34.ec2.internal",
+    "summary": "Kubernetes: payment-api pod memory at 96% of node allocatable and authorisation worker hung (no heartbeat 4m) on ip-10-0-12-34.ec2.internal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

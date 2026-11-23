@@ -12,7 +12,7 @@
     },
     "group": "payments",
     "severity": "info",
-    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "source": "ip-10-0-12-34.ec2.internal",
     "summary": "Kubernetes: liveness probe latency 1.2s on payment-api (threshold 1s)"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
