@@ -12,7 +12,7 @@
       "oldest_unacknowledged": "14m (contractual SLA 15m)",
       "partner": "Availity",
       "platform": "clearinghouse",
-      "service": "claims-reconciliation"
+      "service": "payment-api"
     },
     "group": "payer-connectivity",
     "severity": "warning",

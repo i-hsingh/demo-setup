@@ -3,22 +3,22 @@
 # The runner's default ClusterRole (see the runner KB) can exec into pods but
 # cannot patch Deployments. Rather than widening the runner, the workflow execs
 # into this toolbox, whose own ServiceAccount may patch Deployments in
-# "healthcare" only.
+# "payments" only.
 #
 # Command the workflow runs inside it (container "worker"):
-#   kubectl -n healthcare set resources deployment/claims-reconciliation -c app \
+#   kubectl -n payments set resources deployment/payment-api -c app \
 #     --requests=memory=256Mi --limits=memory=512Mi
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: claims-toolbox
-  namespace: healthcare
+  name: payments-toolbox
+  namespace: payments
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: claims-toolbox
-  namespace: healthcare
+  name: payments-toolbox
+  namespace: payments
 rules:
   - apiGroups: [apps]
     resources: [deployments]
@@ -30,25 +30,25 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: claims-toolbox
-  namespace: healthcare
+  name: payments-toolbox
+  namespace: payments
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: claims-toolbox
+  name: payments-toolbox
 subjects:
   - kind: ServiceAccount
-    name: claims-toolbox
-    namespace: healthcare
+    name: payments-toolbox
+    namespace: payments
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: claims-toolbox
-  namespace: healthcare
-  labels: { app: claims-toolbox }
+  name: payments-toolbox
+  namespace: payments
+  labels: { app: payments-toolbox }
 spec:
-  serviceAccountName: claims-toolbox
+  serviceAccountName: payments-toolbox
   automountServiceAccountToken: true
   terminationGracePeriodSeconds: 5
   containers:

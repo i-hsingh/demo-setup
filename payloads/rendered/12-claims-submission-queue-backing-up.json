@@ -1,6 +1,6 @@
 {
   "client": "Prometheus Alertmanager (reinvent-kind)",
-  "dedup_key": "reinvent/healthcare/claims-queue-backlog",
+  "dedup_key": "reinvent/payments/claims-queue-backlog",
   "event_action": "trigger",
   "payload": {
     "class": "queue_backlog",
@@ -9,17 +9,17 @@
       "alertname": "ClaimsQueueBacklog",
       "cluster": "reinvent-kind",
       "compliance": "Claims must be acknowledged to payers within the contractual window; HIPAA/X12 999 acknowledgements are now delayed. Compliance exposure if the backlog exceeds 60m.",
-      "consumer": "healthcare/claims-reconciliation (0 acks in 4m)",
+      "consumer": "payments/payment-api (0 acks in 4m)",
       "depth": 4812,
       "oldest_message_age": "11m",
       "platform": "kubernetes",
       "queue": "claims.submissions.837",
-      "service": "claims-reconciliation"
+      "service": "payment-api"
     },
-    "group": "healthcare",
+    "group": "payments",
     "severity": "warning",
     "source": "reinvent-control-plane",
-    "summary": "Kubernetes: claims submission queue depth 4,812 (threshold 500), oldest message 11m, consumer claims-reconciliation not acking"
+    "summary": "Kubernetes: claims submission queue depth 4,812 (threshold 500), oldest message 11m, consumer payment-api not acking"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

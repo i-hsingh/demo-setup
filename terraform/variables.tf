@@ -14,19 +14,19 @@ variable "team_id" {
 variable "technical_service_name" {
   description = "The culprit. Must equal custom_details.service in payloads routed to it."
   type        = string
-  default     = "claims-reconciliation"
+  default     = "payment-api"
 }
 
 variable "scheduling_service_name" {
   description = "Second technical service, on the same node. Must equal custom_details.service in payloads routed to it."
   type        = string
-  default     = "scheduling"
+  default     = "checkout"
 }
 
 variable "business_service_name" {
   description = "Customer-facing business service that depends on both technical services."
   type        = string
-  default     = "patient-portal"
+  default     = "payments-portal"
 }
 
 # --- Alert grouping ---------------------------------------------------------
@@ -115,7 +115,7 @@ variable "slack_workspace_id" {
 variable "runbook_base_url" {
   description = "Where the per-service runbooks live. The global orchestration sets custom_details.runbook.github to <this>/<service name>.md."
   type        = string
-  default     = "https://github.com/justynroberts/reinvent/blob/main/runbook"
+  default     = "https://github.com/i-hsingh/demo-setup/blob/main/runbook"
 }
 
 # --- Kubernetes workflows ---------------------------------------------------
@@ -129,13 +129,13 @@ variable "k8s_connection_id" {
 variable "k8s_namespace" {
   description = "Namespace the Kubernetes workflows run in and report on."
   type        = string
-  default     = "healthcare"
+  default     = "payments"
 }
 
 variable "k8s_exec_pod" {
   description = "Pod the Kubernetes workflows run their commands in. Any pod with /bin/sh works (the commands only echo)."
   type        = string
-  default     = "claims-toolbox"
+  default     = "payments-toolbox"
 }
 
 variable "k8s_exec_container" {

@@ -51,11 +51,11 @@ var settled = headerFrame{len(logoRows)}
 func header(f headerFrame) string {
 	if termWidth() < 60 || tileBG == "" {
 		return "\n " + cAccent + cBold + "Patient portal outage" + cReset + "\033[K\n" +
-			" " + cDim + "claims-reconciliation memory leak · PagerDuty demo · " + version + cReset + "\033[K\n\n"
+			" " + cDim + "payment-api memory leak · PagerDuty demo · " + version + cReset + "\033[K\n\n"
 	}
 	side := map[int]string{
 		3: cBold + "Patient portal outage" + cReset,
-		4: cDim + "claims-reconciliation memory leak" + cReset,
+		4: cDim + "payment-api memory leak" + cReset,
 		5: cDim + "PagerDuty demo · " + version + cReset,
 	}
 	var b strings.Builder

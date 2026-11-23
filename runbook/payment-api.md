@@ -1,11 +1,11 @@
-# Runbook: claims-reconciliation
+# Runbook: payment-api
 
 | | |
 |---|---|
-| **Service** | `claims-reconciliation` (PagerDuty technical service) |
-| **Supports** | `patient-portal` (business service) |
-| **Runs on** | Kubernetes, namespace `healthcare`, Deployment `claims-reconciliation`, container `app` |
-| **Co-located with** | `scheduling`, `patient-portal` pods (same node) |
+| **Service** | `payment-api` (PagerDuty technical service) |
+| **Supports** | `payments-portal` (business service) |
+| **Runs on** | Kubernetes, namespace `payments`, Deployment `payment-api`, container `app` |
+| **Co-located with** | `scheduling`, `payments-portal` pods (same node) |
 | **Watch** | Claims acknowledgements (X12 999/277CA) have contractual deadlines, so check the `claims.submissions.837` backlog early. |
 
 ## What it does
@@ -18,7 +18,7 @@ Consumes claim submissions from the `claims.submissions.837` queue, parses them 
 
 - Container working set grows linearly after a rollout and never plateaus.
 - The container has **no memory limit**, so it is not OOM-killed. It grows until the node hits `MemoryPressure`.
-- The kubelet evicts *other* pods on the node first (`patient-portal`, `scheduling`), so customer-facing workloads fail before claims-reconciliation does.
+- The kubelet evicts *other* pods on the node first (`payments-portal`, `scheduling`), so customer-facing workloads fail before payment-api does.
 - The worker thread blocks: heartbeat stops, queue consumer stops acking, and `claims.submissions.837` backs up.
 
 **Most likely cause**
@@ -29,22 +29,22 @@ A dependency change in the most recent rollout. Check change events on the servi
 
 ```bash
 # Which pod, which node, how long since the rollout
-kubectl -n healthcare get pods -l app=claims-reconciliation -o wide
-kubectl -n healthcare rollout history deployment/claims-reconciliation
+kubectl -n payments get pods -l app=payment-api -o wide
+kubectl -n payments rollout history deployment/payment-api
 
 # Memory (requires metrics-server)
-kubectl -n healthcare top pod -l app=claims-reconciliation
+kubectl -n payments top pod -l app=payment-api
 kubectl describe node <node> | grep -A5 Conditions
 
 # Confirm there is no limit
-kubectl -n healthcare get deployment claims-reconciliation \
+kubectl -n payments get deployment payment-api \
   -o jsonpath='{.spec.template.spec.containers[0].resources}'
 
 # Hung worker
-kubectl -n healthcare logs deploy/claims-reconciliation --tail=50 | grep -E 'blocked|heartbeat'
+kubectl -n payments logs deploy/payment-api --tail=50 | grep -E 'blocked|heartbeat'
 
 # Collateral
-kubectl -n healthcare get pods --field-selector=status.phase=Failed
+kubectl -n payments get pods --field-selector=status.phase=Failed
 ```
 
 Confirm the leak if **all** of these are true:
@@ -63,13 +63,13 @@ PagerDuty workflow: **Kubernetes Remediation** → *Pod Created through Deployme
 
 ```bash
 # 1. Restart: delete the leaking pod; the Deployment recreates it
-kubectl -n healthcare delete pod -l app=claims-reconciliation
+kubectl -n payments delete pod -l app=payment-api
 
 # 2. Wait for the replacement
-kubectl -n healthcare rollout status deployment/claims-reconciliation --timeout=120s
+kubectl -n payments rollout status deployment/payment-api --timeout=120s
 
-# 3. Apply a memory limit (run from the claims-toolbox pod, which may patch Deployments)
-kubectl -n healthcare set resources deployment/claims-reconciliation -c app \
+# 3. Apply a memory limit (run from the payments-toolbox pod, which may patch Deployments)
+kubectl -n payments set resources deployment/payment-api -c app \
   --requests=memory=256Mi --limits=memory=512Mi
 ```
 
@@ -78,21 +78,21 @@ kubectl -n healthcare set resources deployment/claims-reconciliation -c app \
 PagerDuty workflow: **Kubernetes Remediation** → *Pod Created Adhoc*.
 
 ```bash
-kubectl -n healthcare delete pod claims-reconciliation
+kubectl -n payments delete pod payment-api
 sleep 15
-kubectl apply -f k8s/claims-reconciliation-adhoc-pod.yaml   # same spec, with memory limit
+kubectl apply -f k8s/payment-api-adhoc-pod.yaml   # same spec, with memory limit
 ```
 
 ## Verify
 
-- [ ] New `claims-reconciliation` pod is `Running` and `Ready`. Its limits show `memory: 512Mi`.
+- [ ] New `payment-api` pod is `Running` and `Ready`. Its limits show `memory: 512Mi`.
 - [ ] Node `MemoryPressure=False`.
-- [ ] `scheduling` and `patient-portal` pods are rescheduled and `Ready 1/1`.
+- [ ] `scheduling` and `payments-portal` pods are rescheduled and `Ready 1/1`.
 - [ ] Queue depth on `claims.submissions.837` is falling and the consumer is acking.
 - [ ] No new `KubePodMemoryNearNodeAllocatable` or `KubeNodeMemoryPressure` alerts for 15 minutes.
 
 ## Follow-up (not during the incident)
 
 - Pin `x12-claims-parser` to `4.2.1` or roll back to `v2.13.4` until upstream fixes buffer pooling.
-- Add a `LimitRange` to `healthcare` so no container ships without a memory limit.
+- Add a `LimitRange` to `payments` so no container ships without a memory limit.
 - Add an alert on working-set growth rate, not only absolute usage.

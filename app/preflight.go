@@ -20,10 +20,10 @@ type pdObject struct{ kind, name string }
 // (variables.tf defaults and workflows.tf). TestOwnedObjectsMatchTerraform
 // keeps this list honest.
 var ownedObjects = []pdObject{
-	{"service", "claims-reconciliation"},
-	{"service", "scheduling"},
-	{"business service", "patient-portal"},
-	{"escalation policy", "claims-reconciliation escalation"},
+	{"service", "payment-api"},
+	{"service", "checkout"},
+	{"business service", "payments-portal"},
+	{"escalation policy", "payment-api escalation"},
 	{"event orchestration", "Reinvent Patient"},
 	{"incident workflow", "🏥 Paige Virtual Responder - Dedicated Slack Channel"},
 	{"incident workflow", "🏥 Kubernetes diagnostics"},

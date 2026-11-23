@@ -70,4 +70,4 @@ func useWorkspace() (string, error) {
 }
 
 // githubRepo is where releases, the installer and the setup guide live.
-const githubRepo = "justynroberts/reinvent"
+const githubRepo = "i-hsingh/demo-setup"

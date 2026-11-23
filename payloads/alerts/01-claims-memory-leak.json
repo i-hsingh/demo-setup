@@ -27,7 +27,7 @@
       "process_state": "reconciliation worker thread blocked; heartbeat last seen 4m ago; pod still Running and Ready=False",
       "restarts": 0,
       "suspected_change": "{{.Vars.library}} {{.Vars.library_from}} → {{.Vars.library_to}} shipped in {{.Vars.image_tag}}",
-      "co_located_workloads": "patient-portal, scheduling (same node)",
+      "co_located_workloads": "payments-portal, scheduling (same node)",
       "alertname": "KubePodMemoryNearNodeAllocatable"
     }
   },

@@ -113,7 +113,7 @@ func TestOwnedObjectsMatchTerraform(t *testing.T) {
 		}
 		all = append(all, b...)
 	}
-	tf := strings.ReplaceAll(string(all), "${var.technical_service_name}", "claims-reconciliation")
+	tf := strings.ReplaceAll(string(all), "${var.technical_service_name}", "payment-api")
 	for _, o := range ownedObjects {
 		if !strings.Contains(tf, `"`+o.name+`"`) && !strings.Contains(tf, `"`+o.name) {
 			t.Errorf("ownedObjects has %s %q, which isn't a name in terraform/*.tf", o.kind, o.name)

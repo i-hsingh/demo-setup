@@ -1,4 +1,4 @@
-// Command trigger drives the claims-reconciliation demo. Run it via the
+// Command trigger drives the payment-api demo. Run it via the
 // ./trigger script at the repo root, which builds it first. With no arguments
 // it opens a menu covering every step; the subcommands below are for scripts.
 //

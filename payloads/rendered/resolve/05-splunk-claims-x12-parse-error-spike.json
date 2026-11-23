@@ -4,7 +4,7 @@
   "event_action": "resolve",
   "payload": {
     "class": "log_anomaly",
-    "component": "claims-reconciliation",
+    "component": "payment-api",
     "custom_details": {
       "baseline_10m": 3,
       "count_10m": 2140,
@@ -12,13 +12,13 @@
       "library": "x12-claims-parser 5.0.0",
       "platform": "splunk",
       "search": "index=claims sourcetype=app level=ERROR | stats count by exception",
-      "service": "claims-reconciliation",
+      "service": "payment-api",
       "top_exception": "X12ParseException: segment buffer pool exhausted (pool=payer-conn-17, size=4096)"
     },
     "group": "claims-platform",
     "severity": "error",
     "source": "splunk-search:claims-errors-10m",
-    "summary": "Splunk: claims-reconciliation error log spike, 2,140 X12ParseException \"segment buffer pool exhausted\" in 10m (baseline 3)"
+    "summary": "Splunk: payment-api error log spike, 2,140 X12ParseException \"segment buffer pool exhausted\" in 10m (baseline 3)"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

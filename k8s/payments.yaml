@@ -1,19 +1,19 @@
-# Demo workloads for the claims-reconciliation story.
-# All three run in namespace "healthcare" on the same node.
+# Demo workloads for the payment-api story.
+# All three run in namespace "payments" on the same node.
 #
-# claims-reconciliation deliberately has NO memory limit and leaks memory up to
+# payment-api deliberately has NO memory limit and leaks memory up to
 # LEAK_CAP_MB, then logs a blocked worker - the "hung process". The cap keeps
 # a laptop safe; the alert payloads carry the production-scale numbers.
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: healthcare
+  name: payments
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: claims-reconciliation-app
-  namespace: healthcare
+  name: payment-api-app
+  namespace: payments
 data:
   app.py: |
     import os, time
@@ -21,7 +21,7 @@ data:
     step = int(os.environ.get("LEAK_STEP_MB", "5"))
     interval = int(os.environ.get("LEAK_INTERVAL_S", "10"))
     held = []
-    print("claims-reconciliation v2.14.0 starting (x12-claims-parser 5.0.0)", flush=True)
+    print("payment-api v2.14.0 starting (x12-claims-parser 5.0.0)", flush=True)
     while True:
         if len(held) * step < cap:
             held.append(b"x" * (step << 20))   # pooled segment buffers never released
@@ -33,19 +33,19 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: claims-reconciliation
-  namespace: healthcare
-  labels: { app: claims-reconciliation }
+  name: payment-api
+  namespace: payments
+  labels: { app: payment-api }
   annotations:
     app.example-health/version: v2.14.0
     app.example-health/change: "x12-claims-parser 4.2.1 -> 5.0.0"
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: claims-reconciliation }
+    matchLabels: { app: payment-api }
   template:
     metadata:
-      labels: { app: claims-reconciliation, version: v2.14.0 }
+      labels: { app: payment-api, version: v2.14.0 }
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -59,21 +59,21 @@ spec:
           # No resources block: this is the bug the remediation fixes.
       volumes:
         - name: app
-          configMap: { name: claims-reconciliation-app }
+          configMap: { name: payment-api-app }
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: patient-portal
-  namespace: healthcare
-  labels: { app: patient-portal }
+  name: payments-portal
+  namespace: payments
+  labels: { app: payments-portal }
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: patient-portal }
+    matchLabels: { app: payments-portal }
   template:
     metadata:
-      labels: { app: patient-portal }
+      labels: { app: payments-portal }
     spec:
       containers:
         - name: web
@@ -86,7 +86,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduling
-  namespace: healthcare
+  namespace: payments
   labels: { app: scheduling }
 spec:
   replicas: 1

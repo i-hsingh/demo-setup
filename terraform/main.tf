@@ -1,12 +1,12 @@
 # Services, the business service and the dependency graph.
 #
-#                               ┌──> claims-reconciliation (technical)  <- the culprit
-#   patient-portal (business) ──┤
+#                               ┌──> payment-api (technical)  <- the culprit
+#   payments-portal (business) ──┤
 #                               └──> scheduling            (technical)  <- evicted neighbour
 #
 # Alerts reach the technical services through the global Event Orchestration
 # in orchestration.tf (dynamic routing on custom_details.service). When either
-# technical service has an open incident, patient-portal shows as impacted on
+# technical service has an open incident, payments-portal shows as impacted on
 # the service graph, the Business Services view and the internal status page.
 
 locals {
@@ -17,11 +17,11 @@ locals {
   technical_services = {
     claims = {
       name        = var.technical_service_name
-      description = "Reconciles submitted insurance claims against payer remittance (X12 835/837). Runs as a Deployment in the healthcare namespace and shares a node with scheduling and the patient portal."
+      description = "Reconciles submitted insurance claims against payer remittance (X12 835/837). Runs as a Deployment in the payments namespace and shares a node with scheduling and the patient portal."
     }
     scheduling = {
       name        = var.scheduling_service_name
-      description = "Appointment booking for clinics and patients. Runs as a Deployment in the healthcare namespace on the same node as claims-reconciliation."
+      description = "Appointment booking for clinics and patients. Runs as a Deployment in the payments namespace on the same node as payment-api."
     }
   }
 }
@@ -32,7 +32,7 @@ data "pagerduty_user" "responder" {
 
 resource "pagerduty_escalation_policy" "claims" {
   name        = "${var.technical_service_name} escalation"
-  description = "Level 1 is Paige (SRE Agent, added in the UI). The human responder is the backstop. Shared by claims-reconciliation and scheduling."
+  description = "Level 1 is Paige (SRE Agent, added in the UI). The human responder is the backstop. Shared by payment-api and scheduling."
   num_loops   = 1
   teams       = local.team == null ? null : [local.team]
 
@@ -79,14 +79,14 @@ resource "pagerduty_service_integration" "changes" {
 }
 
 resource "pagerduty_alert_grouping_setting" "tech" {
-  name     = "healthcare node grouping"
+  name     = "payments node grouping"
   type     = var.alert_grouping_type
   services = [for s in pagerduty_service.tech : s.id]
 
   config {
     time_window = var.alert_grouping_type == "intelligent" ? var.alert_grouping_window_seconds : null
     # Cross-service: one setting covering both services lets an alert on
-    # scheduling join the claims-reconciliation incident (same node).
+    # scheduling join the payment-api incident (same node).
     iag_fields = var.alert_grouping_type == "intelligent" ? var.iag_fields : null
     timeout    = var.alert_grouping_type == "time" ? var.alert_grouping_window_seconds : null
     aggregate  = var.alert_grouping_type == "content_based" ? "all" : null
@@ -97,7 +97,7 @@ resource "pagerduty_alert_grouping_setting" "tech" {
 
 resource "pagerduty_business_service" "patient_portal" {
   name             = var.business_service_name
-  description      = "Patients log in to view results, bills and messages, and book appointments. Customer-facing. Depends on claims-reconciliation and scheduling."
+  description      = "Patients log in to view results, bills and messages, and book appointments. Customer-facing. Depends on payment-api and scheduling."
   point_of_contact = "Patient Experience on-call"
   team             = local.team
 }
@@ -117,7 +117,7 @@ resource "pagerduty_service_dependency" "portal_on_tech" {
   }
 }
 
-# Renamed resources: keep an existing claims-reconciliation (and its incidents)
+# Renamed resources: keep an existing payment-api (and its incidents)
 # instead of destroying and recreating it on the next apply.
 moved {
   from = pagerduty_service.claims

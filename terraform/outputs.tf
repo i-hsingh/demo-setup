@@ -1,6 +1,6 @@
 output "routing_key" {
   description = "Global Event Orchestration routing key. Every alert goes here and is routed on custom_details.service. Read by the trigger app."
-  value       = pagerduty_event_orchestration.healthcare.integration[0].parameters[0].routing_key
+  value       = pagerduty_event_orchestration.payments.integration[0].parameters[0].routing_key
   sensitive   = true
 }
 
@@ -24,7 +24,7 @@ output "business_service" {
 }
 
 output "event_orchestration_id" {
-  value = pagerduty_event_orchestration.healthcare.id
+  value = pagerduty_event_orchestration.payments.id
 }
 
 output "escalation_policy_id" {

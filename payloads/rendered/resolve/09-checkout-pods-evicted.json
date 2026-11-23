@@ -1,0 +1,27 @@
+{
+  "client": "Prometheus Alertmanager (reinvent-kind)",
+  "dedup_key": "reinvent/payments/colocated-evictions",
+  "event_action": "resolve",
+  "payload": {
+    "class": "pod_evicted",
+    "component": "checkout",
+    "custom_details": {
+      "alertname": "KubeDeploymentReplicasUnavailable",
+      "cluster": "reinvent-kind",
+      "co_located_cause": "payments/payment-api holding 7.4Gi with no memory limit",
+      "customer_impact": "payments-portal: appointment booking returning 503",
+      "evicted_pods": "payments-portal (reason: Evicted, node had MemoryPressure), scheduling (reason: Evicted, node had MemoryPressure)",
+      "namespace": "payments",
+      "node": "reinvent-control-plane",
+      "pending_reason": "0/1 nodes available: 1 node(s) had untolerated taint {node.kubernetes.io/memory-pressure}",
+      "platform": "kubernetes",
+      "ready_replicas": "payments-portal 0/1, scheduling 0/1",
+      "service": "checkout"
+    },
+    "group": "payments",
+    "severity": "critical",
+    "source": "reinvent-control-plane",
+    "summary": "Kubernetes: scheduling pods evicted from reinvent-control-plane (MemoryPressure), 0/1 ready; appointment booking down in payments-portal"
+  },
+  "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
+}

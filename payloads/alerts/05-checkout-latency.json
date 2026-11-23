@@ -1,6 +1,6 @@
 {
   "event_action": "trigger",
-  "dedup_key": "reinvent/{{.Vars.namespace}}/scheduling-latency",
+  "dedup_key": "reinvent/{{.Vars.namespace}}/checkout-latency",
   "client": "Prometheus Alertmanager ({{.Vars.cluster}})",
   "payload": {
     "summary": "Kubernetes: {{.Vars.scheduling_service}} p95 latency 2.4s (SLO 500ms), readiness probe failing on {{.Vars.node}}",

@@ -1,6 +1,6 @@
 {
   "event_action": "trigger",
-  "dedup_key": "reinvent/{{.Vars.namespace}}/scheduling-503s",
+  "dedup_key": "reinvent/{{.Vars.namespace}}/checkout-503s",
   "client": "Prometheus Alertmanager ({{.Vars.cluster}})",
   "payload": {
     "summary": "Kubernetes: ingress returning 503 for 38% of {{.Vars.scheduling_service}} requests, 0 ready endpoints; appointment booking failing in {{.Vars.business_service}}",

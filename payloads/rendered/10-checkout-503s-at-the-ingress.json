@@ -1,7 +1,7 @@
 {
   "client": "Prometheus Alertmanager (reinvent-kind)",
-  "dedup_key": "reinvent/healthcare/scheduling-503s",
-  "event_action": "resolve",
+  "dedup_key": "reinvent/payments/checkout-503s",
+  "event_action": "trigger",
   "payload": {
     "class": "http_5xx",
     "component": "ingress-nginx → scheduling",
@@ -9,18 +9,18 @@
       "affected_routes": "/api/appointments, /api/slots",
       "alertname": "IngressHigh5xxRate",
       "cluster": "reinvent-kind",
-      "customer_impact": "patient-portal: patients can't book or change appointments",
+      "customer_impact": "payments-portal: patients can't book or change appointments",
       "error_rate": "38% 503 over 5m (threshold 5%)",
-      "namespace": "healthcare",
+      "namespace": "payments",
       "node": "reinvent-control-plane",
       "platform": "kubernetes",
       "ready_endpoints": "0/1 (pod evicted, replacement Pending on memory-pressure taint)",
-      "service": "scheduling"
+      "service": "checkout"
     },
-    "group": "healthcare",
+    "group": "payments",
     "severity": "error",
     "source": "reinvent-control-plane",
-    "summary": "Kubernetes: ingress returning 503 for 38% of scheduling requests, 0 ready endpoints; appointment booking failing in patient-portal"
+    "summary": "Kubernetes: ingress returning 503 for 38% of scheduling requests, 0 ready endpoints; appointment booking failing in payments-portal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

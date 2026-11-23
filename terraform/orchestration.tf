@@ -4,26 +4,26 @@
 #    rules add a runbook link, then the router picks the service.
 #    Dynamic routing reads custom_details.service and routes to the technical
 #    service with that exact name. Anything without a matching name falls to
-#    the catch-all, which sends it to claims-reconciliation so nothing is lost.
+#    the catch-all, which sends it to payment-api so nothing is lost.
 #
 # 2. Service orchestration, on each technical service:
 #    Rule 1: drop info-level probe noise (shows EO suppressing what nobody needs).
 #    Rule 2: anything that mentions Kubernetes is a node-level workload problem
-#            on the node patient-portal depends on. Raise to critical and
+#            on the node payments-portal depends on. Raise to critical and
 #            annotate it so Paige and responders know where to look first.
 #            No priority here: a person sets P1 by running Major Incident.
 
-resource "pagerduty_event_orchestration" "healthcare" {
+resource "pagerduty_event_orchestration" "payments" {
   name        = "Reinvent Patient"
-  description = "Kubernetes alerts for the patient-portal estate. Dynamic routing on custom_details.service to claims-reconciliation or scheduling."
+  description = "Kubernetes alerts for the payments-portal estate. Dynamic routing on custom_details.service to payment-api or scheduling."
   team        = local.team
 }
 
 # Global rules run before routing. This one adds a link to the runbook for the
 # service the alert is about: custom_details.runbook.github =
 # <runbook_base_url>/<custom_details.service>.md (runbook/*.md in this repo).
-resource "pagerduty_event_orchestration_global" "healthcare" {
-  event_orchestration = pagerduty_event_orchestration.healthcare.id
+resource "pagerduty_event_orchestration_global" "payments" {
+  event_orchestration = pagerduty_event_orchestration.payments.id
 
   set {
     id = "start"
@@ -53,8 +53,8 @@ resource "pagerduty_event_orchestration_global" "healthcare" {
   }
 }
 
-resource "pagerduty_event_orchestration_router" "healthcare" {
-  event_orchestration = pagerduty_event_orchestration.healthcare.id
+resource "pagerduty_event_orchestration_router" "payments" {
+  event_orchestration = pagerduty_event_orchestration.payments.id
 
   set {
     id = "start"
@@ -99,16 +99,16 @@ resource "pagerduty_event_orchestration_service" "tech" {
     }
 
     rule {
-      label = "Kubernetes workload behind patient-portal → critical + annotation"
+      label = "Kubernetes workload behind payments-portal → critical + annotation"
       condition {
         expression = "event.summary matches regex '(?i)kubernetes' or event.custom_details.platform matches 'kubernetes'"
       }
       actions {
         severity = "critical"
         annotate = join(" ", [
-          "[Event Orchestration] Kubernetes workload alert on the node shared by claims-reconciliation and scheduling; patient-portal (business service) depends on both.",
-          "Check recent change events on claims-reconciliation first (library upgrade in v2.14.0).",
-          "Runbook: restart the pod and apply a memory limit to the claims-reconciliation deployment.",
+          "[Event Orchestration] Kubernetes workload alert on the node shared by payment-api and scheduling; payments-portal (business service) depends on both.",
+          "Check recent change events on payment-api first (library upgrade in v2.14.0).",
+          "Runbook: restart the pod and apply a memory limit to the payment-api deployment.",
         ])
 
         extraction {

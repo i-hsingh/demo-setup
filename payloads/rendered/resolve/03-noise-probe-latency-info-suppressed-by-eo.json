@@ -1,19 +1,19 @@
 {
-  "dedup_key": "reinvent/healthcare/claims-reconciliation/probe-latency",
+  "dedup_key": "reinvent/payments/payment-api/probe-latency",
   "event_action": "resolve",
   "payload": {
     "class": "probe_latency",
-    "component": "claims-reconciliation",
+    "component": "payment-api",
     "custom_details": {
       "cluster": "reinvent-kind",
       "note": "Info-level noise. The Event Orchestration suppresses it, so it never pages anyone.",
       "platform": "kubernetes",
-      "service": "claims-reconciliation"
+      "service": "payment-api"
     },
-    "group": "healthcare",
+    "group": "payments",
     "severity": "info",
     "source": "reinvent-control-plane",
-    "summary": "Kubernetes: liveness probe latency 1.2s on claims-reconciliation (threshold 1s)"
+    "summary": "Kubernetes: liveness probe latency 1.2s on payment-api (threshold 1s)"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }
