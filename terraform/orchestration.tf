@@ -15,7 +15,7 @@
 
 resource "pagerduty_event_orchestration" "payments" {
   name        = "Payments Demo"
-  description = "Kubernetes alerts for the payments-portal estate. Dynamic routing on custom_details.service to payment-api or scheduling."
+  description = "Kubernetes alerts for the payments-portal estate. Dynamic routing on custom_details.service to payment-api or checkout."
   team        = local.team
 }
 
