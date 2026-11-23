@@ -2,7 +2,7 @@
 #
 #                               ┌──> payment-api (technical)  <- the culprit
 #   payments-portal (business) ──┤
-#                               └──> scheduling            (technical)  <- evicted neighbour
+#                               └──> checkout              (technical)  <- evicted neighbour
 #
 # Alerts reach the technical services through the global Event Orchestration
 # in orchestration.tf (dynamic routing on custom_details.service). When either
@@ -17,11 +17,11 @@ locals {
   technical_services = {
     claims = {
       name        = var.technical_service_name
-      description = "Reconciles submitted insurance claims against payer remittance (X12 835/837). Runs as a Deployment in the payments namespace and shares a node with scheduling and the patient portal."
+      description = "Card authorisation and settlement worker: decodes ISO 8583 messages, sends authorisations to the acquirer and submits settlement batches. Runs as a Deployment in the payments namespace and shares a node with checkout and payments-portal."
     }
     scheduling = {
       name        = var.scheduling_service_name
-      description = "Appointment booking for clinics and patients. Runs as a Deployment in the payments namespace on the same node as payment-api."
+      description = "Cart confirmation and payment submission for customers, backed by the RDS checkout-db. Runs as a Deployment in the payments namespace on the same node as payment-api."
     }
   }
 }
@@ -32,7 +32,7 @@ data "pagerduty_user" "responder" {
 
 resource "pagerduty_escalation_policy" "claims" {
   name        = "${var.technical_service_name} escalation"
-  description = "Level 1 is Paige (SRE Agent, added in the UI). The human responder is the backstop. Shared by payment-api and scheduling."
+  description = "Level 1 is Paige (SRE Agent, added in the UI). The human responder is the backstop. Shared by payment-api and checkout."
   num_loops   = 1
   teams       = local.team == null ? null : [local.team]
 
@@ -86,7 +86,7 @@ resource "pagerduty_alert_grouping_setting" "tech" {
   config {
     time_window = var.alert_grouping_type == "intelligent" ? var.alert_grouping_window_seconds : null
     # Cross-service: one setting covering both services lets an alert on
-    # scheduling join the payment-api incident (same node).
+    # checkout join the payment-api incident (same node).
     iag_fields = var.alert_grouping_type == "intelligent" ? var.iag_fields : null
     timeout    = var.alert_grouping_type == "time" ? var.alert_grouping_window_seconds : null
     aggregate  = var.alert_grouping_type == "content_based" ? "all" : null
@@ -97,8 +97,8 @@ resource "pagerduty_alert_grouping_setting" "tech" {
 
 resource "pagerduty_business_service" "patient_portal" {
   name             = var.business_service_name
-  description      = "Patients log in to view results, bills and messages, and book appointments. Customer-facing. Depends on payment-api and scheduling."
-  point_of_contact = "Patient Experience on-call"
+  description      = "Customers pay for orders and manage saved cards. Customer-facing. Depends on payment-api and checkout."
+  point_of_contact = "Payments Experience on-call"
   team             = local.team
 }
 

@@ -14,7 +14,7 @@
 #            No priority here: a person sets P1 by running Major Incident.
 
 resource "pagerduty_event_orchestration" "payments" {
-  name        = "Reinvent Patient"
+  name        = "Payments Demo"
   description = "Kubernetes alerts for the payments-portal estate. Dynamic routing on custom_details.service to payment-api or scheduling."
   team        = local.team
 }
@@ -106,7 +106,7 @@ resource "pagerduty_event_orchestration_service" "tech" {
       actions {
         severity = "critical"
         annotate = join(" ", [
-          "[Event Orchestration] Kubernetes workload alert on the node shared by payment-api and scheduling; payments-portal (business service) depends on both.",
+          "[Event Orchestration] Kubernetes workload alert on the node shared by payment-api and checkout; payments-portal (business service) depends on both.",
           "Check recent change events on payment-api first (library upgrade in v2.14.0).",
           "Runbook: restart the pod and apply a memory limit to the payment-api deployment.",
         ])
