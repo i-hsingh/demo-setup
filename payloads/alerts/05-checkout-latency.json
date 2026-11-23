@@ -21,8 +21,8 @@
       "readiness_probe": "3 of last 5 failed (timeout 1s)",
       "container_memory": "41Mi of 64Mi limit (normal)",
       "cpu_throttling": "28% of periods throttled; node CPU steal rising as memory reclaim kicks in",
-      "note": "Scheduling's own memory is normal. The node is under memory pressure.",
-      "alertname": "SchedulingLatencySLOBreach"
+      "note": "Checkout's own memory is normal. The node is under memory pressure.",
+      "alertname": "CheckoutLatencySLOBreach"
     }
   }
 }

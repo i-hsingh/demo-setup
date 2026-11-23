@@ -7,13 +7,13 @@ URL=${PD_EVENTS_URL:-https://events.pagerduty.com}
 post() { printf '%-50s ' "$2"; curl -sS -X POST "$URL$1" -H 'Content-Type: application/json' -d @"$2"; echo; }
 post /v2/change/enqueue 01-change-event-checkout-v5-2-0-config-only-red-herring.json
 sleep 2
-post /v2/change/enqueue 02-change-event-v2-14-0-rollout-library-upgrade.json
+post /v2/change/enqueue 02-change-event-payment-api-v2-14-0-rollout-codec-library-upgrade.json
 sleep 3
 post /v2/enqueue 03-noise-probe-latency-info-suppressed-by-eo.json
 sleep 2
 post /v2/enqueue 04-payment-api-memory-leak-worker-hung.json
 sleep 3
-post /v2/enqueue 05-splunk-claims-x12-parse-error-spike.json
+post /v2/enqueue 05-splunk-payment-api-iso-8583-decode-error-spike.json
 sleep 2
 post /v2/enqueue 06-checkout-latency-readiness-failing.json
 sleep 2
@@ -21,12 +21,12 @@ post /v2/enqueue 07-rds-checkout-db-read-latency.json
 sleep 3
 post /v2/enqueue 08-node-memorypressure-kubelet-evicting.json
 sleep 2
-post /v2/enqueue 09-checkout-pods-evicted.json
+post /v2/enqueue 09-checkout-and-payments-portal-pods-evicted.json
 sleep 2
 post /v2/enqueue 10-checkout-503s-at-the-ingress.json
 sleep 2
-post /v2/enqueue 11-synthetics-book-an-appointment-journey-failing.json
+post /v2/enqueue 11-synthetics-complete-a-purchase-journey-failing.json
 sleep 3
-post /v2/enqueue 12-claims-submission-queue-backing-up.json
+post /v2/enqueue 12-card-authorisation-queue-backing-up.json
 sleep 2
-post /v2/enqueue 13-clearinghouse-999-acknowledgements-overdue.json
+post /v2/enqueue 13-acquirer-settlement-batch-acknowledgements-overdue.json

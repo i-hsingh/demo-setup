@@ -1,10 +1,10 @@
 {
-  "client": "Prometheus Alertmanager (reinvent-kind)",
+  "client": "Prometheus Alertmanager (eks-sre-demo)",
   "dedup_key": "reinvent/payments/payment-api/memory-leak",
   "event_action": "resolve",
   "links": [
     {
-      "href": "https://grafana.example-health.internal/d/k8s-pod?var-pod=payment-api",
+      "href": "https://grafana.example-payments.internal/d/k8s-pod?var-pod=payment-api",
       "text": "Grafana: pod memory"
     }
   ],
@@ -13,28 +13,28 @@
     "component": "payment-api",
     "custom_details": {
       "alertname": "KubePodMemoryNearNodeAllocatable",
-      "cluster": "reinvent-kind",
-      "co_located_workloads": "payments-portal, scheduling (same node)",
+      "cluster": "eks-sre-demo",
+      "co_located_workloads": "payments-portal, checkout (same node)",
       "container": "app",
       "container_memory_working_set": "7.4Gi",
       "deployment": "payment-api",
-      "image": "registry.internal/claims/payment-api:v2.14.0",
+      "image": "registry.internal/payments/payment-api:v2.14.0",
       "memory_limit": "none (resources.limits.memory not set)",
       "memory_trend": "linear growth of ~150Mi/min since rollout of v2.14.0 47m ago; flat at ~600Mi on v2.13.4",
       "namespace": "payments",
-      "node": "reinvent-control-plane",
+      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
       "node_allocatable_memory": "7.7Gi",
       "platform": "kubernetes",
       "pod_selector": "app=payment-api",
-      "process_state": "reconciliation worker thread blocked; heartbeat last seen 4m ago; pod still Running and Ready=False",
+      "process_state": "card authorisation worker thread blocked; heartbeat last seen 4m ago; pod still Running and Ready=False",
       "restarts": 0,
       "service": "payment-api",
-      "suspected_change": "x12-claims-parser 4.2.1 → 5.0.0 shipped in v2.14.0"
+      "suspected_change": "iso8583-codec 3.4.2 → 4.0.0 shipped in v2.14.0"
     },
     "group": "payments",
     "severity": "critical",
-    "source": "reinvent-control-plane",
-    "summary": "Kubernetes: payment-api pod memory at 96% of node allocatable and worker hung (no heartbeat 4m) on reinvent-control-plane"
+    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "summary": "Kubernetes: payment-api pod memory at 96% of node allocatable and authorisation worker hung (no heartbeat 4m) on ip-10-0-12-34.ap-southeast-2.compute.internal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

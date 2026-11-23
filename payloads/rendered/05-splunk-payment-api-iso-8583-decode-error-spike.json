@@ -1,0 +1,24 @@
+{
+  "client": "Splunk",
+  "dedup_key": "reinvent/payments/iso8583-decode-errors",
+  "event_action": "trigger",
+  "payload": {
+    "class": "log_anomaly",
+    "component": "payment-api",
+    "custom_details": {
+      "baseline_10m": 3,
+      "count_10m": 2140,
+      "first_seen": "2026-11-23T00:10:38Z",
+      "library": "iso8583-codec 4.0.0",
+      "platform": "splunk",
+      "search": "index=payments sourcetype=app level=ERROR | stats count by exception",
+      "service": "payment-api",
+      "top_exception": "ISO8583DecodeException: message buffer pool exhausted (pool=acquirer-conn-17, size=4096)"
+    },
+    "group": "payments-platform",
+    "severity": "error",
+    "source": "splunk-search:payments-errors-10m",
+    "summary": "Splunk: payment-api error log spike, 2,140 ISO8583DecodeException \"message buffer pool exhausted\" in 10m (baseline 3)"
+  },
+  "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
+}

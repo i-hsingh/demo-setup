@@ -7,12 +7,12 @@ URL=${PD_EVENTS_URL:-https://events.pagerduty.com}
 post() { printf '%-50s ' "$2"; curl -sS -X POST "$URL$1" -H 'Content-Type: application/json' -d @"$2"; echo; }
 post /v2/enqueue resolve/03-noise-probe-latency-info-suppressed-by-eo.json
 post /v2/enqueue resolve/04-payment-api-memory-leak-worker-hung.json
-post /v2/enqueue resolve/05-splunk-claims-x12-parse-error-spike.json
+post /v2/enqueue resolve/05-splunk-payment-api-iso-8583-decode-error-spike.json
 post /v2/enqueue resolve/06-checkout-latency-readiness-failing.json
 post /v2/enqueue resolve/07-rds-checkout-db-read-latency.json
 post /v2/enqueue resolve/08-node-memorypressure-kubelet-evicting.json
-post /v2/enqueue resolve/09-checkout-pods-evicted.json
+post /v2/enqueue resolve/09-checkout-and-payments-portal-pods-evicted.json
 post /v2/enqueue resolve/10-checkout-503s-at-the-ingress.json
-post /v2/enqueue resolve/11-synthetics-book-an-appointment-journey-failing.json
-post /v2/enqueue resolve/12-claims-submission-queue-backing-up.json
-post /v2/enqueue resolve/13-clearinghouse-999-acknowledgements-overdue.json
+post /v2/enqueue resolve/11-synthetics-complete-a-purchase-journey-failing.json
+post /v2/enqueue resolve/12-card-authorisation-queue-backing-up.json
+post /v2/enqueue resolve/13-acquirer-settlement-batch-acknowledgements-overdue.json

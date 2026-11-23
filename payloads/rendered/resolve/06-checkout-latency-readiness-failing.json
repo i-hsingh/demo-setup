@@ -1,19 +1,19 @@
 {
-  "client": "Prometheus Alertmanager (reinvent-kind)",
+  "client": "Prometheus Alertmanager (eks-sre-demo)",
   "dedup_key": "reinvent/payments/checkout-latency",
   "event_action": "resolve",
   "payload": {
     "class": "latency",
     "component": "checkout",
     "custom_details": {
-      "alertname": "SchedulingLatencySLOBreach",
-      "cluster": "reinvent-kind",
+      "alertname": "CheckoutLatencySLOBreach",
+      "cluster": "eks-sre-demo",
       "container_memory": "41Mi of 64Mi limit (normal)",
       "cpu_throttling": "28% of periods throttled; node CPU steal rising as memory reclaim kicks in",
       "deployment": "checkout",
       "namespace": "payments",
-      "node": "reinvent-control-plane",
-      "note": "Scheduling's own memory is normal. The node is under memory pressure.",
+      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+      "note": "Checkout's own memory is normal. The node is under memory pressure.",
       "p95_latency": "2.4s (SLO 500ms, normal 120ms)",
       "platform": "kubernetes",
       "readiness_probe": "3 of last 5 failed (timeout 1s)",
@@ -21,8 +21,8 @@
     },
     "group": "payments",
     "severity": "warning",
-    "source": "reinvent-control-plane",
-    "summary": "Kubernetes: scheduling p95 latency 2.4s (SLO 500ms), readiness probe failing on reinvent-control-plane"
+    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "summary": "Kubernetes: checkout p95 latency 2.4s (SLO 500ms), readiness probe failing on ip-10-0-12-34.ap-southeast-2.compute.internal"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

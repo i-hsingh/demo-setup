@@ -3,7 +3,7 @@
   "dedup_key": "reinvent/{{.Vars.namespace}}/checkout-503s",
   "client": "Prometheus Alertmanager ({{.Vars.cluster}})",
   "payload": {
-    "summary": "Kubernetes: ingress returning 503 for 38% of {{.Vars.scheduling_service}} requests, 0 ready endpoints; appointment booking failing in {{.Vars.business_service}}",
+    "summary": "Kubernetes: ingress returning 503 for 38% of {{.Vars.scheduling_service}} requests, 0 ready endpoints; purchases failing in {{.Vars.business_service}}",
     "source": "{{.Vars.node}}",
     "severity": "error",
     "timestamp": "{{now}}",
@@ -18,8 +18,8 @@
       "node": "{{.Vars.node}}",
       "error_rate": "38% 503 over 5m (threshold 5%)",
       "ready_endpoints": "0/1 (pod evicted, replacement Pending on memory-pressure taint)",
-      "affected_routes": "/api/appointments, /api/slots",
-      "customer_impact": "{{.Vars.business_service}}: patients can't book or change appointments",
+      "affected_routes": "/api/checkout, /api/cart/confirm",
+      "customer_impact": "{{.Vars.business_service}}: customers can't complete purchases",
       "alertname": "IngressHigh5xxRate"
     }
   }

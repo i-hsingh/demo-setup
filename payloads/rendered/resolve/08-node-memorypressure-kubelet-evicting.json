@@ -1,25 +1,25 @@
 {
-  "client": "Prometheus Alertmanager (reinvent-kind)",
-  "dedup_key": "reinvent/reinvent-control-plane/memory-pressure",
+  "client": "Prometheus Alertmanager (eks-sre-demo)",
+  "dedup_key": "reinvent/ip-10-0-12-34.ap-southeast-2.compute.internal/memory-pressure",
   "event_action": "resolve",
   "payload": {
     "class": "node_memory_pressure",
     "component": "kubelet",
     "custom_details": {
       "alertname": "KubeNodeMemoryPressure",
-      "cluster": "reinvent-kind",
+      "cluster": "eks-sre-demo",
       "condition": "MemoryPressure=True",
       "eviction_policy": "kubelet evicts BestEffort/Burstable pods first; payment-api survives because it has no request/limit to exceed",
       "memory_available": "212Mi (eviction threshold 300Mi)",
-      "node": "reinvent-control-plane",
+      "node": "ip-10-0-12-34.ap-southeast-2.compute.internal",
       "platform": "kubernetes",
       "service": "payment-api",
       "top_consumer": "payments/payment-api (7.4Gi working set, no limit)"
     },
-    "group": "reinvent-kind",
+    "group": "eks-sre-demo",
     "severity": "error",
-    "source": "reinvent-control-plane",
-    "summary": "Kubernetes: node reinvent-control-plane MemoryPressure=True, kubelet evicting pods"
+    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "summary": "Kubernetes: node ip-10-0-12-34.ap-southeast-2.compute.internal MemoryPressure=True, kubelet evicting pods"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
 }

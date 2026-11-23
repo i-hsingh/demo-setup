@@ -1,0 +1,25 @@
+{
+  "client": "Prometheus Alertmanager (eks-sre-demo)",
+  "dedup_key": "reinvent/payments/authorisation-queue-backlog",
+  "event_action": "trigger",
+  "payload": {
+    "class": "queue_backlog",
+    "component": "card-authorisation-queue",
+    "custom_details": {
+      "alertname": "AuthorisationQueueBacklog",
+      "business_risk": "Authorisations are timing out at the card network and falling back to stand-in processing. Revenue at risk and scheme penalties if the backlog exceeds 30m.",
+      "cluster": "eks-sre-demo",
+      "consumer": "payments/payment-api (0 acks in 4m)",
+      "depth": 4812,
+      "oldest_message_age": "11m",
+      "platform": "kubernetes",
+      "queue": "payments.authorisations.requests",
+      "service": "payment-api"
+    },
+    "group": "payments",
+    "severity": "warning",
+    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
+    "summary": "Kubernetes: card authorisation queue depth 4,812 (threshold 500), oldest message 11m, consumer payment-api not acking"
+  },
+  "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
+}

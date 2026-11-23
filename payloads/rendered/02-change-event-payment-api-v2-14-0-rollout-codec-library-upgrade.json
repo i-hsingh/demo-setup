@@ -1,0 +1,32 @@
+{
+  "links": [
+    {
+      "href": "https://github.com/example-payments/payment-api/pull/482",
+      "text": "PR #482: bump iso8583-codec to 4.0.0"
+    },
+    {
+      "href": "https://github.com/example-payments/payment-api/releases/tag/v2.14.0",
+      "text": "Release v2.14.0"
+    }
+  ],
+  "payload": {
+    "custom_details": {
+      "change_type": "dependency upgrade",
+      "cluster": "eks-sre-demo",
+      "dependency_changes": "iso8583-codec 3.4.2 → 4.0.0 (major). Release notes: card message decoder now pools buffers per acquirer connection.",
+      "deployed_by": "ci-bot (merge of PR #482 'bump iso8583-codec to 4.x')",
+      "deployment": "payment-api",
+      "image": "registry.internal/payments/payment-api:v2.14.0",
+      "namespace": "payments",
+      "platform": "kubernetes",
+      "previous_image": "registry.internal/payments/payment-api:v2.13.4",
+      "resources_changed": "none - container still has no memory limit",
+      "rollout": "RollingUpdate, 1/1 replicas updated",
+      "service": "payment-api"
+    },
+    "source": "argocd/eks-sre-demo",
+    "summary": "Deployed payment-api v2.14.0 to eks-sre-demo/payments: upgrades iso8583-codec 3.4.2 → 4.0.0",
+    "timestamp": "2026-11-23T00:07:38Z"
+  },
+  "routing_key": "YOUR_PAYMENT_API_CHANGE_KEY"
+}

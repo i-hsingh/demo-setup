@@ -1,0 +1,23 @@
+{
+  "client": "Datadog Synthetics",
+  "dedup_key": "reinvent/synthetics/complete-purchase",
+  "event_action": "trigger",
+  "payload": {
+    "class": "synthetic_failure",
+    "component": "payments-portal web",
+    "custom_details": {
+      "consecutive_failures": 4,
+      "customer_impact": "Customers can't complete purchases in payments-portal",
+      "failing_step": "4 of 6: pay now, POST /api/checkout returned 503",
+      "locations": "Sydney, Singapore, Tokyo (3/3 failing)",
+      "platform": "datadog-synthetics",
+      "service": "checkout",
+      "test": "Complete a purchase (browser, every 1m)"
+    },
+    "group": "synthetics",
+    "severity": "critical",
+    "source": "datadog-synthetics",
+    "summary": "Synthetic check failed: \"Complete a purchase\" journey on payments-portal from 3/3 locations (step 4: POST /api/checkout → 503)"
+  },
+  "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
+}

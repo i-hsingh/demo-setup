@@ -5,14 +5,14 @@
     "class": "probe_latency",
     "component": "payment-api",
     "custom_details": {
-      "cluster": "reinvent-kind",
+      "cluster": "eks-sre-demo",
       "note": "Info-level noise. The Event Orchestration suppresses it, so it never pages anyone.",
       "platform": "kubernetes",
       "service": "payment-api"
     },
     "group": "payments",
     "severity": "info",
-    "source": "reinvent-control-plane",
+    "source": "ip-10-0-12-34.ap-southeast-2.compute.internal",
     "summary": "Kubernetes: liveness probe latency 1.2s on payment-api (threshold 1s)"
   },
   "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"

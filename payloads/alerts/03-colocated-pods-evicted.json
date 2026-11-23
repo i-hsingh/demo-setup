@@ -3,7 +3,7 @@
   "dedup_key": "reinvent/{{.Vars.namespace}}/colocated-evictions",
   "client": "Prometheus Alertmanager ({{.Vars.cluster}})",
   "payload": {
-    "summary": "Kubernetes: scheduling pods evicted from {{.Vars.node}} (MemoryPressure), 0/1 ready; appointment booking down in {{.Vars.business_service}}",
+    "summary": "Kubernetes: checkout and payments-portal pods evicted from {{.Vars.node}} (MemoryPressure), 0/1 ready; customers can't pay in {{.Vars.business_service}}",
     "source": "{{.Vars.node}}",
     "severity": "critical",
     "timestamp": "{{now}}",
@@ -16,10 +16,10 @@
       "cluster": "{{.Vars.cluster}}",
       "namespace": "{{.Vars.namespace}}",
       "node": "{{.Vars.node}}",
-      "evicted_pods": "payments-portal (reason: Evicted, node had MemoryPressure), scheduling (reason: Evicted, node had MemoryPressure)",
-      "ready_replicas": "payments-portal 0/1, scheduling 0/1",
+      "evicted_pods": "payments-portal (reason: Evicted, node had MemoryPressure), checkout (reason: Evicted, node had MemoryPressure)",
+      "ready_replicas": "payments-portal 0/1, checkout 0/1",
       "pending_reason": "0/1 nodes available: 1 node(s) had untolerated taint {node.kubernetes.io/memory-pressure}",
-      "customer_impact": "{{.Vars.business_service}}: appointment booking returning 503",
+      "customer_impact": "{{.Vars.business_service}}: checkout returning 503, customers can't complete purchases",
       "co_located_cause": "{{.Vars.namespace}}/{{.Vars.deployment}} holding 7.4Gi with no memory limit",
       "alertname": "KubeDeploymentReplicasUnavailable"
     }

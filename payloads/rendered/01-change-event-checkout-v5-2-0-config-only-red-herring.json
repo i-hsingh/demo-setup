@@ -1,28 +1,28 @@
 {
   "links": [
     {
-      "href": "https://github.com/example-health/scheduling/pull/219",
-      "text": "PR #219: longer slot cache TTL"
+      "href": "https://github.com/example-payments/checkout/pull/219",
+      "text": "PR #219: longer session cache TTL"
     }
   ],
   "payload": {
     "custom_details": {
       "change_type": "configuration",
-      "cluster": "reinvent-kind",
-      "config_changes": "BOOKING_SLOT_CACHE_TTL 30s → 60s. No dependency or resource changes.",
-      "deployed_by": "ci-bot (merge of PR #219 'longer slot cache to cut DB reads')",
+      "cluster": "eks-sre-demo",
+      "config_changes": "PAYMENT_SESSION_CACHE_TTL 30s → 60s. No dependency or resource changes.",
+      "deployed_by": "ci-bot (merge of PR #219 'longer session cache to cut DB reads')",
       "deployment": "checkout",
-      "image": "registry.internal/clinic/scheduling:v5.2.0",
+      "image": "registry.internal/payments/checkout:v5.2.0",
       "namespace": "payments",
       "platform": "kubernetes",
-      "previous_image": "registry.internal/clinic/scheduling:v3.8.1",
+      "previous_image": "registry.internal/payments/checkout:v5.1.3",
       "resources_changed": "none - memory limit unchanged at 64Mi",
       "rollout": "RollingUpdate, 1/1 replicas updated, healthy for 3h before the incident",
       "service": "checkout"
     },
-    "source": "argocd/reinvent-kind",
-    "summary": "Deployed scheduling v5.2.0 to reinvent-kind/payments: booking slot cache TTL 30s → 60s (config only)",
-    "timestamp": "2026-11-16T15:51:43Z"
+    "source": "argocd/eks-sre-demo",
+    "summary": "Deployed checkout v5.2.0 to eks-sre-demo/payments: payment session cache TTL 30s → 60s (config only)",
+    "timestamp": "2026-11-22T21:54:38Z"
   },
-  "routing_key": "YOUR_SCHEDULING_CHANGE_KEY"
+  "routing_key": "YOUR_CHECKOUT_CHANGE_KEY"
 }

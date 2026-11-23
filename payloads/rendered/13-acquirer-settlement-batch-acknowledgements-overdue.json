@@ -1,0 +1,23 @@
+{
+  "client": "Acquirer gateway monitor",
+  "dedup_key": "reinvent/acquirer/settlement-ack-delay",
+  "event_action": "trigger",
+  "payload": {
+    "class": "sla_risk",
+    "component": "settlement-gateway",
+    "custom_details": {
+      "gateway_status": "healthy: connection up, last poll 30s ago",
+      "note": "Gateway is fine; nothing is being sent because the payment-api authorisation consumer stopped.",
+      "oldest_unacknowledged": "14m (contractual SLA 15m)",
+      "partner": "example-acquirer",
+      "platform": "acquirer",
+      "service": "payment-api",
+      "transactions_waiting": 1206
+    },
+    "group": "acquirer-connectivity",
+    "severity": "warning",
+    "source": "acquirer-gateway",
+    "summary": "Acquirer: settlement batch acknowledgements overdue, oldest 14m (SLA 15m), 1,206 transactions waiting"
+  },
+  "routing_key": "YOUR_ORCHESTRATION_ROUTING_KEY"
+}
