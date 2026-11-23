@@ -22,7 +22,7 @@
     },
     "source": "argocd/eks-sre-demo",
     "summary": "Deployed checkout v5.2.0 to eks-sre-demo/payments: payment session cache TTL 30s → 60s (config only)",
-    "timestamp": "2026-11-22T21:54:38Z"
+    "timestamp": "2026-11-22T22:04:10Z"
   },
   "routing_key": "YOUR_CHECKOUT_CHANGE_KEY"
 }

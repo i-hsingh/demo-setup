@@ -2,15 +2,15 @@
 
 | | |
 |---|---|
-| **Service** | `payment-api` (PagerDuty technical service) |
+| **Service** | `payment-api` (PagerDuty technical service): card authorisation and settlement worker |
 | **Supports** | `payments-portal` (business service) |
-| **Runs on** | Kubernetes, namespace `payments`, Deployment `payment-api`, container `app` |
-| **Co-located with** | `scheduling`, `payments-portal` pods (same node) |
-| **Watch** | Claims acknowledgements (X12 999/277CA) have contractual deadlines, so check the `claims.submissions.837` backlog early. |
+| **Runs on** | Kubernetes, cluster `eks-sre-demo`, namespace `payments`, Deployment `payment-api`, container `app` |
+| **Co-located with** | `checkout`, `payments-portal` pods (same node) |
+| **Watch** | Card authorisations time out at the card network after a few seconds and fall back to stand-in processing, and acquirer settlement batches have a contractual 15-minute acknowledgement SLA. Check the `payments.authorisations.requests` backlog early. |
 
 ## What it does
 
-Consumes claim submissions from the `claims.submissions.837` queue, parses them with `x12-claims-parser`, and reconciles them against payer remittance (835). It does not serve user traffic, but it shares a node with services that do.
+Consumes card authorisation requests from the `payments.authorisations.requests` queue, decodes ISO 8583 messages with `iso8583-codec`, sends them to the acquirer, and submits settlement batches. It does not serve user traffic directly, but it shares a node with services that do.
 
 ## Known failure: memory leak → node memory pressure
 
@@ -18,12 +18,14 @@ Consumes claim submissions from the `claims.submissions.837` queue, parses them 
 
 - Container working set grows linearly after a rollout and never plateaus.
 - The container has **no memory limit**, so it is not OOM-killed. It grows until the node hits `MemoryPressure`.
-- The kubelet evicts *other* pods on the node first (`payments-portal`, `scheduling`), so customer-facing workloads fail before payment-api does.
-- The worker thread blocks: heartbeat stops, queue consumer stops acking, and `claims.submissions.837` backs up.
+- The kubelet evicts *other* pods on the node first (`payments-portal`, `checkout`), so customer-facing checkout fails before payment-api does.
+- The authorisation worker blocks: heartbeat stops, the queue consumer stops acking, `payments.authorisations.requests` backs up, and settlement acknowledgements go overdue.
 
 **Most likely cause**
 
-A dependency change in the most recent rollout. Check change events on the service first. `x12-claims-parser` 5.x pools segment buffers per payer connection and does not release them. This was introduced in `v2.14.0`.
+A dependency change in the most recent rollout. Check change events on the service first. `iso8583-codec` 4.x pools message buffers per acquirer connection and does not release them. This was introduced in `v2.14.0`.
+
+A config-only change to `checkout` (session cache TTL) may also appear in recent changes. It changes no dependencies or resources and is not the cause.
 
 ## Diagnose
 
@@ -87,12 +89,13 @@ kubectl apply -f k8s/payment-api-adhoc-pod.yaml   # same spec, with memory limit
 
 - [ ] New `payment-api` pod is `Running` and `Ready`. Its limits show `memory: 512Mi`.
 - [ ] Node `MemoryPressure=False`.
-- [ ] `scheduling` and `payments-portal` pods are rescheduled and `Ready 1/1`.
-- [ ] Queue depth on `claims.submissions.837` is falling and the consumer is acking.
+- [ ] `checkout` and `payments-portal` pods are rescheduled and `Ready 1/1`.
+- [ ] Queue depth on `payments.authorisations.requests` is falling and the consumer is acking.
+- [ ] Settlement acknowledgements are arriving from the acquirer.
 - [ ] No new `KubePodMemoryNearNodeAllocatable` or `KubeNodeMemoryPressure` alerts for 15 minutes.
 
 ## Follow-up (not during the incident)
 
-- Pin `x12-claims-parser` to `4.2.1` or roll back to `v2.13.4` until upstream fixes buffer pooling.
+- Pin `iso8583-codec` to `3.4.2` or roll back to `v2.13.4` until upstream fixes buffer pooling.
 - Add a `LimitRange` to `payments` so no container ships without a memory limit.
 - Add an alert on working-set growth rate, not only absolute usage.

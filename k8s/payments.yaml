@@ -3,7 +3,7 @@
 #
 # payment-api deliberately has NO memory limit and leaks memory up to
 # LEAK_CAP_MB, then logs a blocked worker - the "hung process". The cap keeps
-# a laptop safe; the alert payloads carry the production-scale numbers.
+# a small node safe; the alert payloads carry the production-scale numbers.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -21,13 +21,13 @@ data:
     step = int(os.environ.get("LEAK_STEP_MB", "5"))
     interval = int(os.environ.get("LEAK_INTERVAL_S", "10"))
     held = []
-    print("payment-api v2.14.0 starting (x12-claims-parser 5.0.0)", flush=True)
+    print("payment-api v2.14.0 starting (iso8583-codec 4.0.0)", flush=True)
     while True:
         if len(held) * step < cap:
-            held.append(b"x" * (step << 20))   # pooled segment buffers never released
-            print(f"reconciled batch; parser buffer pool {len(held) * step}MB", flush=True)
+            held.append(b"x" * (step << 20))   # pooled message buffers never released
+            print(f"authorised batch; codec buffer pool {len(held) * step}MB", flush=True)
         else:
-            print("WARN reconciliation worker blocked: heartbeat missed, 0 claims acked", flush=True)
+            print("WARN authorisation worker blocked: heartbeat missed, 0 authorisations acked", flush=True)
         time.sleep(interval)
 ---
 apiVersion: apps/v1
@@ -37,8 +37,8 @@ metadata:
   namespace: payments
   labels: { app: payment-api }
   annotations:
-    app.example-health/version: v2.14.0
-    app.example-health/change: "x12-claims-parser 4.2.1 -> 5.0.0"
+    app.example-payments/version: v2.14.0
+    app.example-payments/change: "iso8583-codec 3.4.2 -> 4.0.0"
 spec:
   replicas: 1
   selector:
@@ -85,16 +85,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scheduling
+  name: checkout
   namespace: payments
-  labels: { app: scheduling }
+  labels: { app: checkout }
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: scheduling }
+    matchLabels: { app: checkout }
   template:
     metadata:
-      labels: { app: scheduling }
+      labels: { app: checkout }
     spec:
       containers:
         - name: api

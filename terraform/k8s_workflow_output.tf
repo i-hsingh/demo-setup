@@ -9,7 +9,7 @@
 locals {
   k8s_ns   = var.k8s_namespace
   k8s_app  = var.technical_service_name
-  k8s_node = "reinvent-control-plane"
+  k8s_node = "ip-10-0-12-34.ap-southeast-2.compute.internal"
 
   # Diagnostics: the broken state.
   k8s_diagnostics_lines = [
@@ -24,7 +24,7 @@ locals {
     "NAME                    READY   UP-TO-DATE   AVAILABLE   AGE",
     "${local.k8s_app}   1/1     1            1           12d",
     "payments-portal          0/1     1            0           12d",
-    "scheduling              0/1     1            0           12d",
+    "checkout                0/1     1            0           12d",
     "",
     "$ kubectl -n ${local.k8s_ns} top pods",
     "NAME                                    CPU(cores)   MEMORY(bytes)",
@@ -47,15 +47,15 @@ locals {
     "$ kubectl -n ${local.k8s_ns} rollout history deploy/${local.k8s_app}",
     "deployment.apps/${local.k8s_app}",
     "REVISION  CHANGE-CAUSE",
-    "41        image registry.internal/claims/${local.k8s_app}:v2.13.4",
-    "42        image registry.internal/claims/${local.k8s_app}:v2.14.0",
+    "41        image registry.internal/payments/${local.k8s_app}:v2.13.4",
+    "42        image registry.internal/payments/${local.k8s_app}:v2.14.0",
     "",
     "$ kubectl -n ${local.k8s_ns} logs deploy/${local.k8s_app} --tail=5",
-    "level=warn component=x12parser msg=\"segment buffer grew\" batch=18233 segments=41882 streaming=false",
-    "level=warn component=x12parser msg=\"heap after GC\" heap_inuse=7.1GiB",
+    "level=warn component=iso8583codec msg=\"message buffer grew\" batch=18233 messages=41882 streaming=false",
+    "level=warn component=iso8583codec msg=\"heap after GC\" heap_inuse=7.1GiB",
     "level=error component=worker msg=\"heartbeat missed\" since=240s queue_depth=12904",
-    "level=error component=clearinghouse msg=\"ACK timeout\" batch=18231",
-    "level=error component=clearinghouse msg=\"ACK timeout\" batch=18232",
+    "level=error component=acquirer msg=\"settlement ACK timeout\" batch=18231",
+    "level=error component=acquirer msg=\"settlement ACK timeout\" batch=18232",
   ]
 
   # Remediation: the deployment with new settings, then everything healthy.
@@ -63,7 +63,7 @@ locals {
     "$ kubectl -n ${local.k8s_ns} set resources deploy/${local.k8s_app} -c app --requests=memory=256Mi --limits=memory=512Mi",
     "deployment.apps/${local.k8s_app} resource requirements updated",
     "",
-    "$ kubectl -n ${local.k8s_ns} set env deploy/${local.k8s_app} -c app X12_PARSER_STREAMING=true X12_MAX_BATCH_SEGMENTS=5000 GOMEMLIMIT=450MiB",
+    "$ kubectl -n ${local.k8s_ns} set env deploy/${local.k8s_app} -c app ISO8583_STREAMING_DECODE=true ISO8583_MAX_POOLED_BUFFERS=5000 GOMEMLIMIT=450MiB",
     "deployment.apps/${local.k8s_app} env updated",
     "",
     "$ kubectl -n ${local.k8s_ns} rollout status deploy/${local.k8s_app} --timeout=120s",
@@ -83,7 +83,7 @@ locals {
     "NAME                    READY   UP-TO-DATE   AVAILABLE   AGE",
     "${local.k8s_app}   1/1     1            1           12d",
     "payments-portal          1/1     1            1           12d",
-    "scheduling              1/1     1            1           12d",
+    "checkout                1/1     1            1           12d",
     "",
     "$ kubectl -n ${local.k8s_ns} top pods",
     "NAME                                    CPU(cores)   MEMORY(bytes)",
@@ -99,10 +99,10 @@ locals {
     "No resources found",
     "",
     "$ kubectl -n ${local.k8s_ns} logs deploy/${local.k8s_app} --tail=4",
-    "level=info component=x12parser msg=\"streaming enabled\" max_batch_segments=5000",
+    "level=info component=iso8583codec msg=\"streaming enabled\" max_pooled_buffers=5000",
     "level=info component=worker msg=\"heartbeat\" queue_depth=8711",
-    "level=info component=clearinghouse msg=\"ACK received\" batch=18231",
-    "level=info component=clearinghouse msg=\"ACK received\" batch=18232",
+    "level=info component=acquirer msg=\"settlement ACK received\" batch=18231",
+    "level=info component=acquirer msg=\"settlement ACK received\" batch=18232",
   ]
 
   # Shell for Run Pod Command: one echo per line.

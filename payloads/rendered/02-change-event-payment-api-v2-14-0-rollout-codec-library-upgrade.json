@@ -26,7 +26,7 @@
     },
     "source": "argocd/eks-sre-demo",
     "summary": "Deployed payment-api v2.14.0 to eks-sre-demo/payments: upgrades iso8583-codec 3.4.2 → 4.0.0",
-    "timestamp": "2026-11-23T00:07:38Z"
+    "timestamp": "2026-11-23T00:17:10Z"
   },
   "routing_key": "YOUR_PAYMENT_API_CHANGE_KEY"
 }
